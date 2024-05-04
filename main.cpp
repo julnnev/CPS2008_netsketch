@@ -5,47 +5,10 @@
 #include <thread>
 #include <sstream>
 #include <vector>
-
-struct CircleShape {
-    std::string name = "circle";
-    int x;
-    int y;
-    float radius;
-};
-
-struct RectangleShape  {
-    std::string name = "rectangle";
-    int topLeftX;
-    int topLeftY;
-    int bottomRightX;
-    int bottomRightY;
-};
-
-struct LineShape{
-    std::string name = "line";
-    int startX{};
-    int startY{};
-    int endX{};
-    int endY{};
-};
-
-struct TextShape{
-    std::string name = "text";
-    int x;
-    int y;
-    std::string text;
-};
-
-using Item = std::variant<CircleShape, RectangleShape, LineShape, TextShape>;
-
-struct Command {
-    Item item;
-    std::tuple<int, int, int> RGBColour;
-};
+#include "draw.h"
 
 void readInput(Command *command, std::mutex& mutex) {
     fflush(stdin);
-    //Command drawCommand;
     std::string input;
     std::tuple<int, int, int> RGBColour;
     auto colour = std::make_tuple(0,0,0); //default colour is black
