@@ -9,10 +9,15 @@
 #include <netinet/in.h>
 #include <netdb.h>
 #include <unistd.h>
-#include <string.h>
 #include "connect_server.h"
 #include "connect_server.cpp"
-
+#include <raylib.h>
+#include <unistd.h>
+#include <iostream>
+#include <string>
+#include <thread>
+#include <sstream>
+#include <vector>
 
 class client {
 
