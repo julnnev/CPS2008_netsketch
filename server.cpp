@@ -128,35 +128,6 @@ int main(void) {
             exit(EXIT_FAILURE);
         }
 
-
-//        for (const auto& pfd : fds)
-//            if (pfd.revents!=0) { // is bit set/not, ie. 1 pending, 0 none pending
-//                if (i == sock) { //original socket?
-//                    /* Connection request on original socket. */
-//                    int New;
-//                    size = sizeof(clientname);
-//                    New = accept(sock, (struct sockaddr *) &clientname,
-//                                 reinterpret_cast<socklen_t *>(&size)); //we get a new socket bound to the client
-//                    if (New < 0) {
-//                        close(sock);
-//                        perror("accept");
-//                        exit(EXIT_FAILURE);
-//                    }
-//
-//                    fprintf(stderr,
-//                            "Server: connect from host %s, port %d.\n",
-//                            inet_ntoa(clientname.sin_addr),
-//                            ntohs(clientname.sin_port));
-//
-//                    //FD_SET (New, &active_fd_set); // we need to add new socket to active file descriptor set
-//                    pollfd pfd_new;
-//                    pfd_new.fd = New;
-//                    pfd_new.events = POLLIN;
-//                    pfd_new.revents = 0;
-//                    fds.push_back(pfd_new);
-//                    // at this point our set contains the original and the new socket (2)
-//                }
-
         // When select returns we need to service sockets with pending action.
         /* Service all the sockets with input pending. */
 
