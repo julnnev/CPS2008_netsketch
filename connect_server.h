@@ -5,7 +5,7 @@
 #ifndef NETSKETCH_CONNECT_SERVER_H
 #define NETSKETCH_CONNECT_SERVER_H
 #include <cereal/types/string.hpp>
-class Connect { //change to struct
+struct Connect { //change to struct
 public:
     std::string username;
     bool success;
