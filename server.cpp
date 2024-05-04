@@ -1,6 +1,7 @@
 #include <sstream>
 #include <cereal/archives/portable_binary.hpp>
 #include "server.h"
+#include <pthread.h>
 
 int read_from_client(int filedes) { //handling client requests
     char buffer[MAXMSG];
@@ -18,25 +19,25 @@ int read_from_client(int filedes) { //handling client requests
         // End-of-file.
         return -1; //closes socket
     else {
-
-        Connect connection;
-        std::istringstream iss(std::string(buffer, MAXMSG));
-        cereal::PortableBinaryInputArchive archive(iss);
-        archive(connection); // connection is the object
-
-        connection.username;
-        connection.success;
-
         // Data read.
-        fprintf(stderr, "Server: got success: `%d`\n", connection.success);
-        fprintf(stderr, "Server: got message: `%s`\n", connection.username.c_str());
-
-
+        fprintf(stderr, "Server: got message: `%s`\n", buffer);
         if ((nbytes = write(filedes, "I got your message", 18)) < 0) {
             close(filedes);
             perror("ERROR writing to socket");
             exit(EXIT_FAILURE);
         }
+
+//        Connect connection;
+//        std::istringstream iss(std::string(buffer, MAXMSG));
+//        cereal::PortableBinaryInputArchive archive(iss);
+//        archive(connection); // connection is the object
+//
+//        connection.username;
+//        connection.success;
+//
+//        // Data read.
+//        fprintf(stderr, "Server: got success: `%d`\n", connection.success);
+//        fprintf(stderr, "Server: got message: `%s`\n", connection.username.c_str());
         return 0;
     }
 }
@@ -50,12 +51,9 @@ int main(void) {
     struct sockaddr_in serv_addr;
     int size;
 
-    std::vector<std::string> users; // vector with 5 empty strings
-
-
     // Create server socket (AF_INET, SOCK_STREAM)
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        perror("ERROR opening socket");
+        fprintf(stderr,"ERROR opening socket");
         exit(1);
     }
 
@@ -65,7 +63,7 @@ int main(void) {
 
     // Get current options
     if ((opts = fcntl(sock, F_GETFL)) < 0) {
-        perror("Error getting socket options\n");
+        fprintf(stderr,"Error getting socket options\n");
         close(sock);
         exit(1);
     }
@@ -74,7 +72,7 @@ int main(void) {
     opts = (opts | O_NONBLOCK);
     if (fcntl(sock, F_SETFL, opts) < 0) {
         {
-            perror("Error setting socket to non-blocking");
+            fprintf(stderr,"Error setting socket to non-blocking");
             close(sock);
             exit(1);
         }
@@ -87,43 +85,29 @@ int main(void) {
     serv_addr.sin_port = htons(PORT);
 
     // Bind the host address
-    if (::bind(sock, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
-        perror("ERROR on binding");
+    if (bind(sock, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
+        fprintf(stderr,"ERROR on binding");
         close(sock);
         exit(1);
     }
 
     // Listen for connections
     if (listen(sock, 1) < 0) {
-        perror("listen");
+        fprintf(stderr,"listen");
         close(sock);
         exit(EXIT_FAILURE);
     }
-
 
 
     /* Initialize the set of active sockets. */
     FD_ZERO (&active_fd_set); //set to all zeros
     FD_SET (sock, &active_fd_set); // if there is an action pending on this set, we need to call accept on that socket
 
-
-
-//    std::vector<pollfd> fds;
-//    pollfd pfd;
-//    pfd.fd = sock;
-//    pfd.events = POLLIN;
-//    pfd.revents = 0;
-//    fds.push_back(pfd); // Add the listening socket to the vector
-
-    while (1) { //infinite loop
+    while (true) { //infinite loop
         /* Block until input arrives on one or more active sockets. */
         read_fd_set = active_fd_set;
         if (select(FD_SETSIZE, &read_fd_set, NULL, NULL, NULL) < 0) {
-            //if (poll(fds.data(), fds.size(), -1) < 0) {
-            // max size set by library - FD_SETSIZE
-            // we want to do something when there is a read request pending on a socket
-            //perror("poll");
-            perror("select");
+            fprintf(stderr,"select");
             close(sock);
             exit(EXIT_FAILURE);
         }
@@ -143,7 +127,7 @@ int main(void) {
 
                     if (New < 0) {
                         close(sock);
-                        perror("accept");
+                        fprintf(stderr,"accept");
                         exit(EXIT_FAILURE);
                     }
 
@@ -155,7 +139,7 @@ int main(void) {
                     FD_SET (New, &active_fd_set); // we need to add new socket to active file descriptor set
                     // at this point our set contains the original and the new socket (2)
 
-            } else {
+                } else {
 //                    char buffer[1024];
 //                    ssize_t bytes_received = recv(i, buffer, sizeof(buffer), 0);
 //                    if (bytes_received == -1) {
@@ -192,13 +176,13 @@ int main(void) {
 //                        continue;
 //                    }
 
-                /* Data arriving on an already-connected socket. */
-                if (read_from_client(i) < 0) {
-                    //close(i);
-                    FD_CLR (i, &active_fd_set);
+                    /* Data arriving on an already-connected socket. */
+                    if (read_from_client(i) < 0) {
+                        close(i);
+                        FD_CLR (i, &active_fd_set);
+                    }
                 }
             }
-        }
     }
 
 }
