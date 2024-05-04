@@ -1,7 +1,3 @@
-//
-// Created by Julianne Vella on 04/05/2024.
-//
-
 #ifndef NETSKETCH_DRAW_H
 #define NETSKETCH_DRAW_H
 
@@ -37,10 +33,9 @@ struct TextShape{
 
 using Item = std::variant<CircleShape, RectangleShape, LineShape, TextShape>;
 
-struct Command {
+struct Draw {
     Item item;
     std::tuple<int, int, int> RGBColour;
 };
-
 
 #endif //NETSKETCH_DRAW_H

@@ -7,7 +7,7 @@
 #include <vector>
 #include "draw.h"
 
-void readInput(Command *command, std::mutex& mutex) {
+void readInput(Draw *command, std::mutex& mutex) {
     fflush(stdin);
     std::string input;
     std::tuple<int, int, int> RGBColour;
@@ -225,7 +225,7 @@ void readInput(Command *command, std::mutex& mutex) {
 int main() {
     std::mutex mutex;
     SetTraceLogLevel(LOG_WARNING); // hide LOG messages from raylib
-    Command command;
+    Draw command;
     std::thread inputThread(readInput, &command, std::ref(mutex));
     const int screenWidth = 1200;
     const int screenHeight = 750;
