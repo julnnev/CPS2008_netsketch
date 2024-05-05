@@ -3,7 +3,20 @@
 #include "server.h"
 #include <pthread.h>
 
-int read_from_client(int filedes) { //handling client requests
+struct toRead{
+    int* p_filedes;
+    fd_set* active_fd_set;
+    bool* close_socket;
+};
+
+void* writeToClient(void* args){
+
+}
+// one thread for each client that waits for client input
+void* readFromClient(void* args){
+    auto* info = static_cast<toRead*>(args);
+    int filedes = *info->p_filedes;
+    fd_set active_fd_set = *info -> active_fd_set;
     char buffer[MAXMSG];
     int nbytes;
 
@@ -15,9 +28,12 @@ int read_from_client(int filedes) { //handling client requests
         close(filedes);
         exit(EXIT_FAILURE);
     }
-    else if (nbytes == 0) //nothing read from client
+    else if (nbytes == 0) {//nothing read from client
         // End-of-file.
-        return -1; //closes socket
+        *info->close_socket = true; //closes socket
+//        close(filedes);
+//        FD_CLR (filedes, &active_fd_set);
+    }
     else {
         // Data read.
         fprintf(stdout, "Server: got message: `%s`", buffer);
@@ -38,8 +54,8 @@ int read_from_client(int filedes) { //handling client requests
 //        // Data read.
 //        fprintf(stderr, "Server: got success: `%d`\n", connection.success);
 //        fprintf(stderr, "Server: got message: `%s`\n", connection.username.c_str());
-        return 0;
     }
+    return nullptr;
 }
 
 void* handleConnections(void *arg){
@@ -141,7 +157,14 @@ void* handleConnections(void *arg){
 //                    }
 
                     /* Data arriving on an already-connected socket. */
-                    if (read_from_client(i) < 0) {
+                    // put in seperate thread
+                    pthread_t thread_id_readFromClient;
+                    bool close_socket = false;
+                    toRead info = {&i, &active_fd_set, &close_socket};
+                    pthread_create(&thread_id_readFromClient, nullptr, readFromClient, &info);
+                    pthread_join(thread_id_readFromClient, nullptr);
+
+                    if (close_socket) {
                         close(i);
                         FD_CLR (i, &active_fd_set);
                     }
@@ -205,5 +228,4 @@ int main() {
 // ./server
 
 
-// one thread for each client that waits for client input
 // thread to update all clients
