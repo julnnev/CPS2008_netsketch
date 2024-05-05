@@ -222,10 +222,9 @@ void *readInput(void* arg) {
         }
 
         else if(tokens[0] == "select"){
-            if(tokens[1] == "none"){
-                // ??
-                // continue processing
-                std::cout << "Continue ..."<< std::endl;
+            if(tokens[1] == "none"){ //deselect
+                select = false;
+                select_id = -1;
 
             } else{
                 try{
