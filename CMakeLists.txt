@@ -30,8 +30,8 @@ set(SKIP_PERFORMANCE_COMPARISON ON)
 FetchContent_MakeAvailable(cereal)
 FetchContent_MakeAvailable(raylib)
 
-add_executable(netsketch main.cpp draw.h)
-add_executable(client client.cpp client.h connect_server.cpp connect_server.h draw.h)
+add_executable(netsketch main.cpp draw.h global_client.cpp global_client.h)
+add_executable(client client.cpp client.h connect_server.cpp connect_server.h draw.h global_client.cpp global_client.h)
 add_executable(server server.cpp server.h connect_server.cpp connect_server.h draw.h)
 
 
