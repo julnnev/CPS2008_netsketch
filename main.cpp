@@ -1,5 +1,4 @@
 #include <raylib.h>
-#include <unistd.h>
 #include <iostream>
 #include <string>
 #include <thread>
@@ -7,9 +6,10 @@
 #include <pthread.h>
 #include <vector>
 #include "draw.h"
+#include "global_client.h"
 
 struct ThreadArgs {
-    Draw* command;
+    //    Draw* command;
     std::mutex *mutex;
     bool* cancelFlag;
 };
@@ -17,7 +17,7 @@ struct ThreadArgs {
 void *readInput(void* arg) {
     auto *threadArgs = static_cast<ThreadArgs *>(arg);
     std::mutex *mutex = threadArgs->mutex;
-    Draw* command = threadArgs->command;
+    Draw command;
     bool* cancelFlag = threadArgs->cancelFlag;
     SetTraceLogLevel(LOG_WARNING); // hide LOG messages from raylib
     fflush(stdin);
@@ -25,6 +25,12 @@ void *readInput(void* arg) {
     std::tuple<int, int, int> RGBColour;
     auto colour = std::make_tuple(0,0,0); //default colour is black
     std::string tool = "line"; //default line
+    int select_id;
+    bool select;
+
+    int delete_id;
+
+
 
     //in parsing - assuming strings will not be surrounded in " "
 
@@ -35,7 +41,6 @@ void *readInput(void* arg) {
         std::cout << ">>> " ;
         std::getline(std::cin, input);
        // debug: std::cout << "Command entered: " << input << std::endl;
-
         std::stringstream ss(input);
 
         while (ss >> token) {
@@ -43,8 +48,9 @@ void *readInput(void* arg) {
         }
 
         if(tokens[0] == "exit"){
-            std::cout << "Goodbye! "<< std::endl;
+            std::cout << "Thank you for using netsketch, goodbye! "<< std::endl;
             *cancelFlag = true;
+            // disconnect!
             break;
         } else if(tokens[0] == "help"){
             printf("NetSketch: A Collaborative Whiteboard\n"
@@ -87,7 +93,7 @@ void *readInput(void* arg) {
             colour = std::make_tuple(std::stoi(tokens[1]), std::stoi(tokens[2]), std::stoi(tokens[3]));
         }
         else if(tokens[0] == "draw"){
-          if (tool ==  "text") {
+            if (tool ==  "text") {
               TextShape text;
               text.x = std::stoi(tokens[1]);
               text.y = std::stoi(tokens[2]);
@@ -103,8 +109,8 @@ void *readInput(void* arg) {
 
               {
                   std::scoped_lock lock{*mutex};
-                  command->RGBColour = colour;
-                  command->item = text;
+                  command.RGBColour = colour;
+                  command.item = text;
               }
 
 
@@ -116,8 +122,8 @@ void *readInput(void* arg) {
 
               {
                   std::scoped_lock lock{*mutex};
-                  command->RGBColour = colour;
-                  command->item = circleShape;
+                  command.RGBColour = colour;
+                  command.item = circleShape;
               }
 
           } else if (tool ==  "rectangle"){
@@ -129,8 +135,8 @@ void *readInput(void* arg) {
 
               {
                   std::scoped_lock lock{*mutex};
-                  command->RGBColour = colour;
-                  command->item = rectangleShape;
+                  command.RGBColour = colour;
+                  command.item = rectangleShape;
               }
           } else if (tool ==  "line"){
               LineShape lineShape;
@@ -141,56 +147,133 @@ void *readInput(void* arg) {
 
               {
                   std::scoped_lock lock{*mutex};
-                  command->RGBColour = colour;
-                  command->item = lineShape;
+                  command.RGBColour = colour;
+                  command.item = lineShape;
               }
           }
 
+            if(select){
+                {
+                    std::scoped_lock lock{*mutex};
+                    drawList[select_id].item = command.item;
+
+                    // continue processing
+                }
+                select = false; //toggle back to off
+            } else{
+                {
+                    std::scoped_lock lock{*mutex};
+                    drawList.push_back(command);
+
+                    //continue processing
+                }
+            }
+
+
         }
         else if(tokens[0] == "list"){
-            // define if statements
+            // define further if statements
+            // .
+            // .
+            //
+            if(tokens[1] == "all" && tokens[2] == "all"){
+                int index = 0;
+                {
+                    std::scoped_lock lock{*mutex};
+                    for (Draw draw: drawList) {
+                        std::cout << "[ " << index++ << " ] => ";
+                        if (std::holds_alternative<CircleShape>(draw.item)) {
+                            auto &circleShape = std::get<CircleShape>(draw.item);
+                            std::cout << "[ circle ] " << "[ " << std::get<0>(draw.RGBColour) << ", "
+                                      << std::get<1>(draw.RGBColour) << ", " << std::get<2>(draw.RGBColour) << " ] "
+                                      << " [ " << circleShape.x << ", " << circleShape.y << ", " << circleShape.radius
+                                      << " ]" << std::endl;
+                        }
+                        if (std::holds_alternative<RectangleShape>(draw.item)) {
+                            auto &rectangleShape = std::get<RectangleShape>(draw.item);
+                            std::cout << "[ rectangle ] " << "[ " << std::get<0>(draw.RGBColour) << ", "
+                                      << std::get<1>(draw.RGBColour) << ", " << std::get<2>(draw.RGBColour) << " ] "
+                                      << " [ " << rectangleShape.topLeftX << ", " << rectangleShape.topLeftY << ", "
+                                      << rectangleShape.bottomRightX << ", " << rectangleShape.bottomRightY << " ]"
+                                      << std::endl;
+                        }
+                        if (std::holds_alternative<LineShape>(draw.item)) {
+                            auto &lineShape = std::get<LineShape>(draw.item);
+                            std::cout << "[ line ] " << "[ " << std::get<0>(draw.RGBColour) << ", "
+                                      << std::get<1>(draw.RGBColour) << ", " << std::get<2>(draw.RGBColour) << " ] "
+                                      << " [ " << lineShape.startX << ", " << lineShape.startX << ", "
+                                      << lineShape.startY << ", " << lineShape.endY << " ]" << std::endl;
+                        }
+                        if (std::holds_alternative<TextShape>(draw.item)) {
+                            auto &textShape = std::get<TextShape>(draw.item);
+                            std::cout << "[ text ] " << "[ " << std::get<0>(draw.RGBColour) << ", "
+                                      << std::get<1>(draw.RGBColour) << ", " << std::get<2>(draw.RGBColour) << " ] "
+                                      << " [ " << textShape.x << ", " << textShape.y << ", " << textShape.text << " ]"
+                                      << std::endl;
+                        }
+                    }
 
-            // continue processing
-            std::cout << "Continue ..."<< std::endl;
-
-
+                }
+            }
         }
 
         else if(tokens[0] == "select"){
-            int id;
             if(tokens[1] == "none"){
+                // ??
                 // continue processing
                 std::cout << "Continue ..."<< std::endl;
 
             } else{
                 try{
-                    id = std::stoi(tokens[1]);
+                    select_id = std::stoi(tokens[1]);
+                    if (select_id >= 0 && select_id < drawList.size()) {
+                        select = true;
+                    } else{
+                        std::cout << "Invalid id for select!"<< std::endl;
+                        select = false;
+                    }
+
                 } catch(std::exception &err){
                     std::cout << "Invalid parameter for select!"<< std::endl;
                 }
-
-                // continue processing
-                std::cout << "Continue ..."<< std::endl;
-
             }
         }
 
         else if (tokens[0] == "delete"){
-            int id;
-            try{
-                id = std::stoi(tokens[1]);
-            } catch(std::exception &err){
+            try {
+                delete_id = std::stoi(tokens[1]);
+
+                // output local list
+                {
+                    std::scoped_lock lock{*mutex};
+                    if (delete_id >= 0 && delete_id < drawList.size()) {
+                        drawList.erase(drawList.begin() + delete_id);
+                    } else{
+                        std::cout << "Invalid id for delete!"<< std::endl;
+                    }
+                }
+            }
+
+             catch(std::exception &err){
                 std::cout << "Invalid parameter for delete!"<< std::endl;
             }
 
-            // continue processing
-            std::cout << "Continue ..." << std::endl;
+            // continue processing updating global list
 
 
         }
-        else if (tokens[0] == "undo"){
-            // continue processing
-            std::cout << "Continue ..." << std::endl;
+        else if (tokens[0] == "undo") {
+            {
+                std::scoped_lock lock{*mutex};
+                if (!drawList.empty()) {
+                    drawList.pop_back();
+                } else{
+                    std::cout << "No draws to undo!" << std::endl;
+                }
+            }
+                // continue processing updating global list
+
+
         }
         else if (tokens[0] == "clear"){
             if(tokens[1] == "all"){
@@ -240,12 +323,12 @@ void *readInput(void* arg) {
 int main() {
     std::mutex mutex;
     SetTraceLogLevel(LOG_WARNING); // hide LOG messages from raylib
-    Draw command;
-    std::vector<Draw> drawList;
+    //Draw command;
     pthread_t thread_id;
     bool cancel=false;
-    ThreadArgs threadArgs = {&command, &mutex, &cancel};
-    pthread_create(&thread_id, NULL, readInput, &threadArgs);
+   // ThreadArgs threadArgs = {&command, &mutex, &cancel};
+    ThreadArgs threadArgs = {&mutex, &cancel};
+    pthread_create(&thread_id, nullptr, readInput, &threadArgs);
     const int screenWidth = 1200;
     const int screenHeight = 750;
     InitWindow(screenWidth, screenHeight, "netsketch");
@@ -255,10 +338,8 @@ int main() {
         ClearBackground(WHITE);
         {
             std::scoped_lock lock{mutex};
-            drawList.push_back(command);
 
             for (const auto& draw : drawList) {
-
                 Color color = {static_cast<unsigned char>(std::get<0>(draw.RGBColour)),
                                static_cast<unsigned char>(std::get<1>(draw.RGBColour)),
                                static_cast<unsigned char>(std::get<2>(draw.RGBColour)), 255};
