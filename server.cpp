@@ -42,54 +42,13 @@ int read_from_client(int filedes) { //handling client requests
     }
 }
 
-int main(void) {
-    // Declare variables
-    int sock;
+void* handleConnections(void *arg){
+    int socket;
     fd_set active_fd_set, read_fd_set;
     int i;
     struct sockaddr_in clientname;
-    struct sockaddr_in serv_addr;
     int size;
-
-    // Create server socket (AF_INET, SOCK_STREAM)
-    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        fprintf(stderr,"ERROR opening socket");
-        exit(1);
-    }
-
-    // Allow address reuse
-    int opts = 1;
-    setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opts, sizeof(opts));
-
-    // Get current options
-    if ((opts = fcntl(sock, F_GETFL)) < 0) {
-        fprintf(stderr,"Error getting socket options\n");
-        close(sock);
-        exit(1);
-    }
-
-    // Set socket to non-blocking
-    opts = (opts | O_NONBLOCK);
-    if (fcntl(sock, F_SETFL, opts) < 0) {
-        {
-            fprintf(stderr,"Error setting socket to non-blocking");
-            close(sock);
-            exit(1);
-        }
-    }
-
-    // Initialize socket structure
-    memset(&serv_addr, 0, sizeof(serv_addr));
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_addr.s_addr = INADDR_ANY; // Accept connections from any address
-    serv_addr.sin_port = htons(PORT);
-
-    // Bind the host address
-    if (bind(sock, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
-        fprintf(stderr,"ERROR on binding");
-        close(sock);
-        exit(1);
-    }
+    int sock = *static_cast<int *>(arg);
 
     // Listen for connections
     if (listen(sock, 1) < 0) {
@@ -98,7 +57,6 @@ int main(void) {
         exit(EXIT_FAILURE);
     }
 
-
     /* Initialize the set of active sockets. */
     FD_ZERO (&active_fd_set); //set to all zeros
     FD_SET (sock, &active_fd_set); // if there is an action pending on this set, we need to call accept on that socket
@@ -106,7 +64,7 @@ int main(void) {
     while (true) { //infinite loop
         /* Block until input arrives on one or more active sockets. */
         read_fd_set = active_fd_set;
-        if (select(FD_SETSIZE, &read_fd_set, NULL, NULL, NULL) < 0) {
+        if (select(FD_SETSIZE, &read_fd_set, nullptr, nullptr, nullptr) < 0) {
             fprintf(stderr,"select");
             close(sock);
             exit(EXIT_FAILURE);
@@ -115,7 +73,7 @@ int main(void) {
         // When select returns we need to service sockets with pending action.
         /* Service all the sockets with input pending. */
 
-        for (i = 0; i < FD_SETSIZE; ++i)
+        for (int i = 0; i < FD_SETSIZE; ++i)
             if (FD_ISSET (i, &read_fd_set)) { // is bit set/not, ie. 1 pending, 0 none pending
                 if (i == sock) { //original socket?
                     /* Connection request on original socket. */
@@ -123,7 +81,6 @@ int main(void) {
                     size = sizeof(clientname);
 
                     New = accept(sock, (struct sockaddr *) &clientname, reinterpret_cast<socklen_t *>(&size)); // new socket bound to the client
-
 
                     if (New < 0) {
                         close(sock);
@@ -138,6 +95,13 @@ int main(void) {
 
                     FD_SET (New, &active_fd_set); // we need to add new socket to active file descriptor set
                     // at this point our set contains the original and the new socket (2)
+
+                    // get connect packet
+                    // deserialize
+                    // check for unique username, otherwise close connection and notify client
+                    //
+
+                    // update server state
 
                 } else {
 //                    char buffer[1024];
@@ -184,7 +148,57 @@ int main(void) {
                 }
             }
     }
+}
 
+int main() {
+    ServerState state;
+    // Declare variables
+    int sock;
+    struct sockaddr_in serv_addr;
+
+    // Create server socket (AF_INET, SOCK_STREAM)
+    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        fprintf(stderr,"ERROR opening socket");
+        exit(1);
+    }
+
+    // Allow address reuse
+    int opts = 1;
+    setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opts, sizeof(opts));
+
+    // Get current options
+    if ((opts = fcntl(sock, F_GETFL)) < 0) {
+        fprintf(stderr,"Error getting socket options\n");
+        close(sock);
+        exit(1);
+    }
+
+    // Set socket to non-blocking
+    opts = (opts | O_NONBLOCK);
+    if (fcntl(sock, F_SETFL, opts) < 0) {
+        {
+            fprintf(stderr,"Error setting socket to non-blocking");
+            close(sock);
+            exit(1);
+        }
+    }
+
+    // Initialize socket structure
+    memset(&serv_addr, 0, sizeof(serv_addr));
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_addr.s_addr = INADDR_ANY; // Accept connections from any address
+    serv_addr.sin_port = htons(PORT);
+
+    // Bind the host address
+    if (bind(sock, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
+        fprintf(stderr,"ERROR on binding");
+        close(sock);
+        exit(1);
+    }
+
+    pthread_t thread_id_handleconnections;
+    pthread_create(&thread_id_handleconnections, NULL, handleConnections, &sock);
+    pthread_join(thread_id_handleconnections, nullptr);
 }
 
 //  g++ -o server server.cpp
