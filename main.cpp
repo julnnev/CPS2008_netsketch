@@ -4,10 +4,22 @@
 #include <string>
 #include <thread>
 #include <sstream>
+#include <pthread.h>
 #include <vector>
 #include "draw.h"
 
-void readInput(Draw *command, std::mutex& mutex) {
+struct ThreadArgs {
+    Draw* command;
+    std::mutex *mutex;
+    bool* cancelFlag;
+};
+
+void *readInput(void* arg) {
+    auto *threadArgs = static_cast<ThreadArgs *>(arg);
+    std::mutex *mutex = threadArgs->mutex;
+    Draw* command = threadArgs->command;
+    bool* cancelFlag = threadArgs->cancelFlag;
+    SetTraceLogLevel(LOG_WARNING); // hide LOG messages from raylib
     fflush(stdin);
     std::string input;
     std::tuple<int, int, int> RGBColour;
@@ -32,6 +44,7 @@ void readInput(Draw *command, std::mutex& mutex) {
 
         if(tokens[0] == "exit"){
             std::cout << "Goodbye! "<< std::endl;
+            *cancelFlag = true;
             break;
         } else if(tokens[0] == "help"){
             printf("NetSketch: A Collaborative Whiteboard\n"
@@ -89,7 +102,7 @@ void readInput(Draw *command, std::mutex& mutex) {
               text.text = text_input;
 
               {
-                  std::scoped_lock lock{mutex};
+                  std::scoped_lock lock{*mutex};
                   command->RGBColour = colour;
                   command->item = text;
               }
@@ -102,7 +115,7 @@ void readInput(Draw *command, std::mutex& mutex) {
               circleShape.radius = std::stof(tokens[3]);
 
               {
-                  std::scoped_lock lock{mutex};
+                  std::scoped_lock lock{*mutex};
                   command->RGBColour = colour;
                   command->item = circleShape;
               }
@@ -115,7 +128,7 @@ void readInput(Draw *command, std::mutex& mutex) {
               rectangleShape.bottomRightY = std::stoi(tokens[4]);
 
               {
-                  std::scoped_lock lock{mutex};
+                  std::scoped_lock lock{*mutex};
                   command->RGBColour = colour;
                   command->item = rectangleShape;
               }
@@ -127,7 +140,7 @@ void readInput(Draw *command, std::mutex& mutex) {
               lineShape.endY = std::stoi(tokens[4]);
 
               {
-                  std::scoped_lock lock{mutex};
+                  std::scoped_lock lock{*mutex};
                   command->RGBColour = colour;
                   command->item = lineShape;
               }
@@ -220,58 +233,68 @@ void readInput(Draw *command, std::mutex& mutex) {
 //            std::cout << "Token at index " << i << ": " << tokens[i] << std::endl;
 //        }
     }
+    return nullptr;
 }
+
 
 int main() {
     std::mutex mutex;
     SetTraceLogLevel(LOG_WARNING); // hide LOG messages from raylib
     Draw command;
-    std::thread inputThread(readInput, &command, std::ref(mutex));
+    std::vector<Draw> drawList;
+    pthread_t thread_id;
+    bool cancel=false;
+    ThreadArgs threadArgs = {&command, &mutex, &cancel};
+    pthread_create(&thread_id, NULL, readInput, &threadArgs);
     const int screenWidth = 1200;
     const int screenHeight = 750;
     InitWindow(screenWidth, screenHeight, "netsketch");
 
-    while (!WindowShouldClose()) {
+    while (!cancel) {
         BeginDrawing();
         ClearBackground(WHITE);
-
         {
             std::scoped_lock lock{mutex};
+            drawList.push_back(command);
 
-            Color color = {static_cast<unsigned char>(std::get<0>(command.RGBColour)),
-                           static_cast<unsigned char>(std::get<1>(command.RGBColour)),
-                           static_cast<unsigned char>(std::get<2>(command.RGBColour)), 255};
-            if (std::holds_alternative<CircleShape>(command.item)) {
-                auto &circleShape = std::get<CircleShape>(command.item);
-                DrawCircle(circleShape.x, circleShape.y, circleShape.radius, color);
-            }
-            if (std::holds_alternative<RectangleShape>(command.item)) {
-                auto &rectangleShape = std::get<RectangleShape>(command.item);
-                int width = rectangleShape.bottomRightX - rectangleShape.topLeftX;
-                int height = rectangleShape.bottomRightY - rectangleShape.topLeftY;
-                int posX = (rectangleShape.topLeftX + rectangleShape.bottomRightX) / 2;
-                int posY = (rectangleShape.topLeftY + rectangleShape.bottomRightY) / 2;
-                //Color color = {static_cast<unsigned char>(std::get<0>(command.RGBColour)),static_cast<unsigned char>(std::get<1>(command.RGBColour)),static_cast<unsigned char>(std::get<2>(command.RGBColour)), 255 };
-                DrawRectangle(posX, posY, width, height, color);
-            }
-            if (std::holds_alternative<LineShape>(command.item)) {
-                auto &lineShape = std::get<LineShape>(command.item);
-                //Color color = {static_cast<unsigned char>(std::get<0>(command.RGBColour)),static_cast<unsigned char>(std::get<1>(command.RGBColour)),static_cast<unsigned char>(std::get<2>(command.RGBColour)), 255 };
-                DrawLine(lineShape.startX, lineShape.startY, lineShape.endX, lineShape.endY, color);
-            }
-            if (std::holds_alternative<TextShape>(command.item)) {
-                auto &textShape = std::get<TextShape>(command.item);
-                //Color color = {static_cast<unsigned char>(std::get<0>(command.RGBColour)),static_cast<unsigned char>(std::get<1>(command.RGBColour)),static_cast<unsigned char>(std::get<2>(command.RGBColour)), 255 };
-                DrawText((textShape.text).c_str(), textShape.x, textShape.y, 30, color);
+            for (const auto& draw : drawList) {
+
+                Color color = {static_cast<unsigned char>(std::get<0>(draw.RGBColour)),
+                               static_cast<unsigned char>(std::get<1>(draw.RGBColour)),
+                               static_cast<unsigned char>(std::get<2>(draw.RGBColour)), 255};
+                if (std::holds_alternative<CircleShape>(draw.item)) {
+                    auto &circleShape = std::get<CircleShape>(draw.item);
+                    DrawCircle(circleShape.x, circleShape.y, circleShape.radius, color);
+                }
+                if (std::holds_alternative<RectangleShape>(draw.item)) {
+                    auto &rectangleShape = std::get<RectangleShape>(draw.item);
+                    int width = rectangleShape.bottomRightX - rectangleShape.topLeftX;
+                    int height = rectangleShape.bottomRightY - rectangleShape.topLeftY;
+                    int posX = (rectangleShape.topLeftX + rectangleShape.bottomRightX) / 2;
+                    int posY = (rectangleShape.topLeftY + rectangleShape.bottomRightY) / 2;
+                    //Color color = {static_cast<unsigned char>(std::get<0>(command.RGBColour)),static_cast<unsigned char>(std::get<1>(command.RGBColour)),static_cast<unsigned char>(std::get<2>(command.RGBColour)), 255 };
+                    DrawRectangle(posX, posY, width, height, color);
+                }
+                if (std::holds_alternative<LineShape>(draw.item)) {
+                    auto &lineShape = std::get<LineShape>(draw.item);
+                    //Color color = {static_cast<unsigned char>(std::get<0>(command.RGBColour)),static_cast<unsigned char>(std::get<1>(command.RGBColour)),static_cast<unsigned char>(std::get<2>(command.RGBColour)), 255 };
+                    DrawLine(lineShape.startX, lineShape.startY, lineShape.endX, lineShape.endY, color);
+                }
+                if (std::holds_alternative<TextShape>(draw.item)) {
+                    auto &textShape = std::get<TextShape>(draw.item);
+                    //Color color = {static_cast<unsigned char>(std::get<0>(command.RGBColour)),static_cast<unsigned char>(std::get<1>(command.RGBColour)),static_cast<unsigned char>(std::get<2>(command.RGBColour)), 255 };
+                    DrawText((textShape.text).c_str(), textShape.x, textShape.y, 30, color);
+                }
             }
         }
 
         EndDrawing();
     }
 
-    inputThread.join();
+    pthread_join(thread_id, nullptr);
 
     CloseWindow();
 
     return 0;
 }
+//cmake -S . -B build ; cd build ; make -j 8
