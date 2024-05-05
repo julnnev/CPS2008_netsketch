@@ -1,11 +1,40 @@
 #include <iostream>
 #include <cereal/archives/portable_binary.hpp>
 #include "client.h"
+char buffer[256];
+
+void* writeToServer(void* arg){
+    int sockfd = *static_cast<int *>(arg);
+    int n;
+    printf("Please enter the message: ");
+    memset(buffer, 0, 256);
+    fgets(buffer, 255, stdin); //place message in buffer
+    if ((n = write(sockfd, buffer, strlen(buffer))) < 0)
+    {
+        fprintf(stderr,"ERROR writing to socket");
+        close(sockfd);
+        exit(1);
+    }
+    return nullptr;
+}
+
+void* readfromServer(void* arg){
+    int n;
+    int sockfd = *static_cast<int *>(arg);
+    memset(buffer, 0, 256);
+    if ((n = read(sockfd, buffer, 255)) < 0)
+    {
+        fprintf(stderr,"ERROR reading from socket");
+        close(sockfd);
+        exit(1);
+    }
+    return nullptr;
+}
 
 int main(int argc, char *argv[])
 {
     // Declare variables
-    int sockfd, portno, n;
+    int sockfd, portno;
     std::string nickname;
     struct sockaddr_in serv_addr;
     struct hostent *server;
@@ -17,7 +46,7 @@ int main(int argc, char *argv[])
     }
     // Get port number
     portno = atoi(argv[2]);
-    //fprintf(stdout, argv[3]);
+    //fprintf(stdout, argv[3]); debug
     nickname = argv[3];
     // Create a socket, similar to server
     if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
@@ -55,13 +84,26 @@ int main(int argc, char *argv[])
 //        printf("%s\n", buffer);
 //    }// else return message that client connected!
 
-    // while(true){
-    // Ask for a message from the user, if connected successfully
-    printf("Please enter the message: ");
-    memset(buffer, 0, 256);
-    fgets(buffer, 255, stdin); //place message in buffer
 
-    //snprintf(buffer, "%s", serialized_data.c_str());
+    pthread_t id_writeToServer;
+    pthread_create(&id_writeToServer, NULL, writeToServer, &sockfd);
+    pthread_join(id_writeToServer, nullptr);
+
+    // in separate thread, Send message to the server
+    pthread_t id_readfromServer;
+    pthread_create(&id_readfromServer, NULL, readfromServer, &sockfd);
+    pthread_join(id_readfromServer, nullptr);
+
+    return 0;
+}
+
+// no: g++ -o client  client.cpp
+// cd build
+// gmake -j 8
+// ./client 127.0.0.1 5001 ju
+
+
+//snprintf(buffer, "%s", serialized_data.c_str());
 
 //    Connect connect_request;
 //    connect_request.username = nickname;
@@ -71,37 +113,8 @@ int main(int argc, char *argv[])
 //    cereal::PortableBinaryOutputArchive archive(oss);
 //    archive(connect_request);
 //    std::string serialized_data = oss.str();
-    //serialise, send to server and check if given nickname valid (ie. unique)
+//serialise, send to server and check if given nickname valid (ie. unique)
 
-    // then proceed to accept instructions after printing success, otherwise exit
-
-    // Send message to the server
-    //if ((n = write(sockfd, serialized_data.data(), strlen(serialized_data.size()))) < 0)
-    if ((n = write(sockfd, buffer, strlen(buffer))) < 0)
-    {
-        fprintf(stderr,"ERROR writing to socket");
-        close(sockfd);
-        exit(1);
-    }
-
-    // Read response from server response
-    memset(buffer, 0, 256);
-    if ((n = read(sockfd, buffer, 255)) < 0)
-    {
-        fprintf(stderr,"ERROR reading from socket");
-        close(sockfd);
-        exit(1);
-    }
-
-    printf("%s\n", buffer);
-    //}
-
-    return 0;
-}
-
-// no: g++ -o client  client.cpp
-// cd build
-//gmake -j 8
-// ./client 127.0.0.1 5001 ju
+// then proceed to accept instructions after printing success, otherwise exit
 
 

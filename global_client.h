@@ -9,6 +9,8 @@
 #include "draw.h"
 
 extern std::vector<Draw> drawList;
+const int screenWidth = 1200;
+const int screenHeight = 750;
 
 class global_client {
 

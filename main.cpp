@@ -23,17 +23,11 @@ void *readInput(void* arg) {
     fflush(stdin);
     std::string input;
     std::tuple<int, int, int> RGBColour;
-    auto colour = std::make_tuple(0,0,0); //default colour is black
+    auto colour = std::make_tuple(0,0,0); //default colour is black,     //in parsing - assuming strings will not be surrounded in " "
     std::string tool = "line"; //default line
     int select_id;
     bool select;
-
     int delete_id;
-
-
-
-    //in parsing - assuming strings will not be surrounded in " "
-
     std::string token;
 
     while (true) {
@@ -90,83 +84,93 @@ void *readInput(void* arg) {
 
         }
         else if(tokens[0] == "colour"){
-            colour = std::make_tuple(std::stoi(tokens[1]), std::stoi(tokens[2]), std::stoi(tokens[3]));
+            try{
+                colour = std::make_tuple(std::stoi(tokens[1]), std::stoi(tokens[2]), std::stoi(tokens[3]));
+            } catch (std::exception &err){
+                std::cout << "Invalid parameters for colour!"<< std::endl;
+            }
+
         }
         else if(tokens[0] == "draw"){
-            if (tool ==  "text") {
-              TextShape text;
-              text.x = std::stoi(tokens[1]);
-              text.y = std::stoi(tokens[2]);
+            try {
 
-              std::string text_input;
-              for (size_t i = 3; i < tokens.size(); ++i) {
-                  text_input += tokens[i]; // Concatenate each string to the result
-                  if (i < tokens.size() - 1) {
-                      text_input += " "; // Retaining spaces
-                  }
-              }
-              text.text = text_input;
+                if (tool == "text") {
+                    TextShape text;
+                    text.x = std::stoi(tokens[1]);
+                    text.y = std::stoi(tokens[2]);
 
-              {
-                  std::scoped_lock lock{*mutex};
-                  command.RGBColour = colour;
-                  command.item = text;
-              }
+                    std::string text_input;
+                    for (size_t i = 3; i < tokens.size(); ++i) {
+                        text_input += tokens[i]; // Concatenate each string to the result
+                        if (i < tokens.size() - 1) {
+                            text_input += " "; // Retaining spaces
+                        }
+                    }
+                    text.text = text_input;
+
+                    {
+                        std::scoped_lock lock{*mutex};
+                        command.RGBColour = colour;
+                        command.item = text;
+                    }
 
 
-          } else if (tool ==  "circle"){
-              CircleShape circleShape;
-              circleShape.x = std::stoi(tokens[1]);
-              circleShape.y = std::stoi(tokens[2]);
-              circleShape.radius = std::stof(tokens[3]);
+                } else if (tool == "circle") {
+                    CircleShape circleShape;
+                    circleShape.x = std::stoi(tokens[1]);
+                    circleShape.y = std::stoi(tokens[2]);
+                    circleShape.radius = std::stof(tokens[3]);
 
-              {
-                  std::scoped_lock lock{*mutex};
-                  command.RGBColour = colour;
-                  command.item = circleShape;
-              }
+                    {
+                        std::scoped_lock lock{*mutex};
+                        command.RGBColour = colour;
+                        command.item = circleShape;
+                    }
 
-          } else if (tool ==  "rectangle"){
-              RectangleShape rectangleShape;
-              rectangleShape.topLeftX = std::stoi(tokens[1]);
-              rectangleShape.topLeftY = std::stoi(tokens[2]);
-              rectangleShape.bottomRightX = std::stoi(tokens[3]);
-              rectangleShape.bottomRightY = std::stoi(tokens[4]);
+                } else if (tool == "rectangle") {
+                    RectangleShape rectangleShape;
+                    rectangleShape.topLeftX = std::stoi(tokens[1]);
+                    rectangleShape.topLeftY = std::stoi(tokens[2]);
+                    rectangleShape.bottomRightX = std::stoi(tokens[3]);
+                    rectangleShape.bottomRightY = std::stoi(tokens[4]);
 
-              {
-                  std::scoped_lock lock{*mutex};
-                  command.RGBColour = colour;
-                  command.item = rectangleShape;
-              }
-          } else if (tool ==  "line"){
-              LineShape lineShape;
-              lineShape.startX = std::stoi(tokens[1]);
-              lineShape.endX = std::stoi(tokens[2]);
-              lineShape.startY = std::stoi(tokens[3]);
-              lineShape.endY = std::stoi(tokens[4]);
+                    {
+                        std::scoped_lock lock{*mutex};
+                        command.RGBColour = colour;
+                        command.item = rectangleShape;
+                    }
+                } else if (tool == "line") {
+                    LineShape lineShape;
+                    lineShape.startX = std::stoi(tokens[1]);
+                    lineShape.endX = std::stoi(tokens[2]);
+                    lineShape.startY = std::stoi(tokens[3]);
+                    lineShape.endY = std::stoi(tokens[4]);
 
-              {
-                  std::scoped_lock lock{*mutex};
-                  command.RGBColour = colour;
-                  command.item = lineShape;
-              }
-          }
-
-            if(select){
-                {
-                    std::scoped_lock lock{*mutex};
-                    drawList[select_id].item = command.item;
-
-                    // continue processing
+                    {
+                        std::scoped_lock lock{*mutex};
+                        command.RGBColour = colour;
+                        command.item = lineShape;
+                    }
                 }
-                select = false; //toggle back to off
-            } else{
-                {
-                    std::scoped_lock lock{*mutex};
-                    drawList.push_back(command);
 
-                    //continue processing
+                if (select) {
+                    {
+                        std::scoped_lock lock{*mutex};
+                        drawList[select_id].item = command.item;
+
+                        // continue processing
+                    }
+                    select = false; //toggle back to off
+                } else {
+                    {
+                        std::scoped_lock lock{*mutex};
+                        drawList.push_back(command);
+
+                        //continue processing
+                    }
                 }
+            }catch (std::exception &err){
+                std::cout << "Invalid parameters for draw!"<< std::endl;
             }
 
 
@@ -305,8 +309,6 @@ void *readInput(void* arg) {
             std::cout << "Invalid command!\nSee help for list of commands"<< std::endl;
         }
 
-
-
 //        Debug tokenizing
 //        for (const auto& t : tokens) {
 //            std::cout << t << std::endl;
@@ -323,14 +325,10 @@ void *readInput(void* arg) {
 int main() {
     std::mutex mutex;
     SetTraceLogLevel(LOG_WARNING); // hide LOG messages from raylib
-    //Draw command;
     pthread_t thread_id;
     bool cancel=false;
-   // ThreadArgs threadArgs = {&command, &mutex, &cancel};
     ThreadArgs threadArgs = {&mutex, &cancel};
     pthread_create(&thread_id, nullptr, readInput, &threadArgs);
-    const int screenWidth = 1200;
-    const int screenHeight = 750;
     InitWindow(screenWidth, screenHeight, "netsketch");
 
     while (!cancel) {
@@ -353,17 +351,14 @@ int main() {
                     int height = rectangleShape.bottomRightY - rectangleShape.topLeftY;
                     int posX = (rectangleShape.topLeftX + rectangleShape.bottomRightX) / 2;
                     int posY = (rectangleShape.topLeftY + rectangleShape.bottomRightY) / 2;
-                    //Color color = {static_cast<unsigned char>(std::get<0>(command.RGBColour)),static_cast<unsigned char>(std::get<1>(command.RGBColour)),static_cast<unsigned char>(std::get<2>(command.RGBColour)), 255 };
                     DrawRectangle(posX, posY, width, height, color);
                 }
                 if (std::holds_alternative<LineShape>(draw.item)) {
                     auto &lineShape = std::get<LineShape>(draw.item);
-                    //Color color = {static_cast<unsigned char>(std::get<0>(command.RGBColour)),static_cast<unsigned char>(std::get<1>(command.RGBColour)),static_cast<unsigned char>(std::get<2>(command.RGBColour)), 255 };
                     DrawLine(lineShape.startX, lineShape.startY, lineShape.endX, lineShape.endY, color);
                 }
                 if (std::holds_alternative<TextShape>(draw.item)) {
                     auto &textShape = std::get<TextShape>(draw.item);
-                    //Color color = {static_cast<unsigned char>(std::get<0>(command.RGBColour)),static_cast<unsigned char>(std::get<1>(command.RGBColour)),static_cast<unsigned char>(std::get<2>(command.RGBColour)), 255 };
                     DrawText((textShape.text).c_str(), textShape.x, textShape.y, 30, color);
                 }
             }

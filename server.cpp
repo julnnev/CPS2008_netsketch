@@ -20,7 +20,7 @@ int read_from_client(int filedes) { //handling client requests
         return -1; //closes socket
     else {
         // Data read.
-        fprintf(stderr, "Server: got message: `%s`\n", buffer);
+        fprintf(stdout, "Server: got message: `%s`", buffer);
         if ((nbytes = write(filedes, "I got your message", 18)) < 0) {
             close(filedes);
             perror("ERROR writing to socket");
