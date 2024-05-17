@@ -20,7 +20,7 @@ set_property(GLOBAL PROPERTY _CMAKE_FindGit_GIT_EXECUTABLE_VERSION
 
 include(ExternalProject)
 ExternalProject_Add(raylib-populate
-                     "UPDATE_DISCONNECTED" "False" "GIT_REPOSITORY" "https://github.com/raysan5/raylib.git" "GIT_TAG" "master" "GIT_PROGRESS" "TRUE"
+                     "UPDATE_DISCONNECTED" "False" "GIT_REPOSITORY" "https://github.com/raysan5/raylib.git" "GIT_TAG" "5.0" "GIT_PROGRESS" "true"
                     SOURCE_DIR          "/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/raylib-src"
                     BINARY_DIR          "/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/raylib-build"
                     CONFIGURE_COMMAND   ""

@@ -3,7 +3,6 @@
 
 _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/cocoa_init.m.o: \
  _deps/raylib-src/src/external/glfw/include/GLFW/glfw3.h \
- _deps/raylib-src/src/external/glfw/include/GLFW/glfw3native.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_init.m \
  _deps/raylib-src/src/external/glfw/src/cocoa_joystick.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_platform.h \
@@ -25,7 +24,6 @@ _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/cocoa_init.m.o: 
  _deps/raylib-src/src/external/glfw/src/xkb_unicode.h
 _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/cocoa_joystick.m.o: \
  _deps/raylib-src/src/external/glfw/include/GLFW/glfw3.h \
- _deps/raylib-src/src/external/glfw/include/GLFW/glfw3native.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_joystick.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_joystick.m \
  _deps/raylib-src/src/external/glfw/src/cocoa_platform.h \
@@ -47,7 +45,6 @@ _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/cocoa_joystick.m
  _deps/raylib-src/src/external/glfw/src/xkb_unicode.h
 _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/cocoa_monitor.m.o: \
  _deps/raylib-src/src/external/glfw/include/GLFW/glfw3.h \
- _deps/raylib-src/src/external/glfw/include/GLFW/glfw3native.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_joystick.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_monitor.m \
  _deps/raylib-src/src/external/glfw/src/cocoa_platform.h \
@@ -69,7 +66,6 @@ _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/cocoa_monitor.m.
  _deps/raylib-src/src/external/glfw/src/xkb_unicode.h
 _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/cocoa_time.c.o: \
  _deps/raylib-src/src/external/glfw/include/GLFW/glfw3.h \
- _deps/raylib-src/src/external/glfw/include/GLFW/glfw3native.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_joystick.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_platform.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_time.c \
@@ -91,7 +87,6 @@ _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/cocoa_time.c.o: 
  _deps/raylib-src/src/external/glfw/src/xkb_unicode.h
 _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/cocoa_window.m.o: \
  _deps/raylib-src/src/external/glfw/include/GLFW/glfw3.h \
- _deps/raylib-src/src/external/glfw/include/GLFW/glfw3native.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_joystick.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_platform.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_time.h \
@@ -113,7 +108,6 @@ _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/cocoa_window.m.o
  _deps/raylib-src/src/external/glfw/src/xkb_unicode.h
 _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/context.c.o: \
  _deps/raylib-src/src/external/glfw/include/GLFW/glfw3.h \
- _deps/raylib-src/src/external/glfw/include/GLFW/glfw3native.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_joystick.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_platform.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_time.h \
@@ -135,7 +129,6 @@ _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/context.c.o: \
  _deps/raylib-src/src/external/glfw/src/xkb_unicode.h
 _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/egl_context.c.o: \
  _deps/raylib-src/src/external/glfw/include/GLFW/glfw3.h \
- _deps/raylib-src/src/external/glfw/include/GLFW/glfw3native.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_joystick.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_platform.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_time.h \
@@ -157,7 +150,6 @@ _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/egl_context.c.o:
  _deps/raylib-src/src/external/glfw/src/xkb_unicode.h
 _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/init.c.o: \
  _deps/raylib-src/src/external/glfw/include/GLFW/glfw3.h \
- _deps/raylib-src/src/external/glfw/include/GLFW/glfw3native.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_joystick.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_platform.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_time.h \
@@ -179,7 +171,6 @@ _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/init.c.o: \
  _deps/raylib-src/src/external/glfw/src/xkb_unicode.h
 _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/input.c.o: \
  _deps/raylib-src/src/external/glfw/include/GLFW/glfw3.h \
- _deps/raylib-src/src/external/glfw/include/GLFW/glfw3native.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_joystick.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_platform.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_time.h \
@@ -202,7 +193,6 @@ _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/input.c.o: \
  _deps/raylib-src/src/external/glfw/src/xkb_unicode.h
 _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/monitor.c.o: \
  _deps/raylib-src/src/external/glfw/include/GLFW/glfw3.h \
- _deps/raylib-src/src/external/glfw/include/GLFW/glfw3native.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_joystick.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_platform.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_time.h \
@@ -224,7 +214,6 @@ _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/monitor.c.o: \
  _deps/raylib-src/src/external/glfw/src/xkb_unicode.h
 _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/nsgl_context.m.o: \
  _deps/raylib-src/src/external/glfw/include/GLFW/glfw3.h \
- _deps/raylib-src/src/external/glfw/include/GLFW/glfw3native.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_joystick.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_platform.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_time.h \
@@ -246,7 +235,6 @@ _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/nsgl_context.m.o
  _deps/raylib-src/src/external/glfw/src/xkb_unicode.h
 _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/null_init.c.o: \
  _deps/raylib-src/src/external/glfw/include/GLFW/glfw3.h \
- _deps/raylib-src/src/external/glfw/include/GLFW/glfw3native.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_joystick.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_platform.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_time.h \
@@ -268,7 +256,6 @@ _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/null_init.c.o: \
  _deps/raylib-src/src/external/glfw/src/xkb_unicode.h
 _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/null_joystick.c.o: \
  _deps/raylib-src/src/external/glfw/include/GLFW/glfw3.h \
- _deps/raylib-src/src/external/glfw/include/GLFW/glfw3native.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_joystick.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_platform.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_time.h \
@@ -290,7 +277,6 @@ _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/null_joystick.c.
  _deps/raylib-src/src/external/glfw/src/xkb_unicode.h
 _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/null_monitor.c.o: \
  _deps/raylib-src/src/external/glfw/include/GLFW/glfw3.h \
- _deps/raylib-src/src/external/glfw/include/GLFW/glfw3native.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_joystick.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_platform.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_time.h \
@@ -312,7 +298,6 @@ _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/null_monitor.c.o
  _deps/raylib-src/src/external/glfw/src/xkb_unicode.h
 _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/null_window.c.o: \
  _deps/raylib-src/src/external/glfw/include/GLFW/glfw3.h \
- _deps/raylib-src/src/external/glfw/include/GLFW/glfw3native.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_joystick.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_platform.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_time.h \
@@ -334,7 +319,6 @@ _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/null_window.c.o:
  _deps/raylib-src/src/external/glfw/src/xkb_unicode.h
 _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/osmesa_context.c.o: \
  _deps/raylib-src/src/external/glfw/include/GLFW/glfw3.h \
- _deps/raylib-src/src/external/glfw/include/GLFW/glfw3native.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_joystick.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_platform.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_time.h \
@@ -356,7 +340,6 @@ _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/osmesa_context.c
  _deps/raylib-src/src/external/glfw/src/xkb_unicode.h
 _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/platform.c.o: \
  _deps/raylib-src/src/external/glfw/include/GLFW/glfw3.h \
- _deps/raylib-src/src/external/glfw/include/GLFW/glfw3native.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_joystick.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_platform.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_time.h \
@@ -378,7 +361,6 @@ _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/platform.c.o: \
  _deps/raylib-src/src/external/glfw/src/xkb_unicode.h
 _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/posix_module.c.o: \
  _deps/raylib-src/src/external/glfw/include/GLFW/glfw3.h \
- _deps/raylib-src/src/external/glfw/include/GLFW/glfw3native.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_joystick.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_platform.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_time.h \
@@ -400,7 +382,6 @@ _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/posix_module.c.o
  _deps/raylib-src/src/external/glfw/src/xkb_unicode.h
 _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/posix_thread.c.o: \
  _deps/raylib-src/src/external/glfw/include/GLFW/glfw3.h \
- _deps/raylib-src/src/external/glfw/include/GLFW/glfw3native.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_joystick.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_platform.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_time.h \
@@ -422,7 +403,6 @@ _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/posix_thread.c.o
  _deps/raylib-src/src/external/glfw/src/xkb_unicode.h
 _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/vulkan.c.o: \
  _deps/raylib-src/src/external/glfw/include/GLFW/glfw3.h \
- _deps/raylib-src/src/external/glfw/include/GLFW/glfw3native.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_joystick.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_platform.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_time.h \
@@ -444,7 +424,6 @@ _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/vulkan.c.o: \
  _deps/raylib-src/src/external/glfw/src/xkb_unicode.h
 _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/window.c.o: \
  _deps/raylib-src/src/external/glfw/include/GLFW/glfw3.h \
- _deps/raylib-src/src/external/glfw/include/GLFW/glfw3native.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_joystick.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_platform.h \
  _deps/raylib-src/src/external/glfw/src/cocoa_time.h \

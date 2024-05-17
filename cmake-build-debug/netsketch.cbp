@@ -5,7 +5,7 @@
 		<Option title="netsketch"/>
 		<Option makefile_is_custom="1"/>
 		<Option compiler="gcc"/>
-		<Option virtualFolders="CMake Files\;CMake Files\cmake-build-debug\;CMake Files\cmake-build-debug\_deps\;CMake Files\cmake-build-debug\_deps\raylib-src\;CMake Files\cmake-build-debug\_deps\raylib-src\src\;CMake Files\cmake-build-debug\_deps\raylib-src\src\external\;CMake Files\cmake-build-debug\_deps\raylib-src\src\external\glfw\;CMake Files\cmake-build-debug\_deps\raylib-src\src\external\glfw\CMake\;CMake Files\cmake-build-debug\_deps\raylib-src\src\external\glfw\src\;CMake Files\cmake-build-debug\_deps\raylib-src\cmake\;"/>
+		<Option virtualFolders="CMake Files\;CMake Files\cmake-build-debug\;CMake Files\cmake-build-debug\_deps\;CMake Files\cmake-build-debug\_deps\raylib-src\;CMake Files\cmake-build-debug\_deps\raylib-src\src\;CMake Files\cmake-build-debug\_deps\raylib-src\src\external\;CMake Files\cmake-build-debug\_deps\raylib-src\src\external\glfw\;CMake Files\cmake-build-debug\_deps\raylib-src\src\external\glfw\CMake\;CMake Files\cmake-build-debug\_deps\raylib-src\src\external\glfw\src\;CMake Files\cmake-build-debug\_deps\raylib-src\cmake\;CMake Files\cmake-build-debug\_deps\cereal-src\;"/>
 		<Build>
 			<Target title="all">
 				<Option working_dir="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug"/>
@@ -57,26 +57,6 @@
 					<DistClean command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="package_source">
-				<Option working_dir="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug"/>
-				<Option type="4"/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 package_source"/>
-					<CompileFile command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="rebuild_cache">
-				<Option working_dir="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug"/>
-				<Option type="4"/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
 			<Target title="netsketch">
 				<Option output="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/netsketch" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug"/>
@@ -89,6 +69,7 @@
 					<Add directory="/Users/juliannevella/Desktop/CPS2008/netsketch/."/>
 					<Add directory="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/raylib-src/src"/>
 					<Add directory="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/raylib-src/src/external/glfw/include"/>
+					<Add directory="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/cereal-src/include"/>
 					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"/>
 					<Add directory="/usr/local/include"/>
 					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/14.0.3/include"/>
@@ -115,6 +96,7 @@
 					<Add directory="/Users/juliannevella/Desktop/CPS2008/netsketch/."/>
 					<Add directory="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/raylib-src/src"/>
 					<Add directory="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/raylib-src/src/external/glfw/include"/>
+					<Add directory="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/cereal-src/include"/>
 					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"/>
 					<Add directory="/usr/local/include"/>
 					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/14.0.3/include"/>
@@ -139,11 +121,83 @@
 					<DistClean command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="package_source">
+				<Option working_dir="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 package_source"/>
+					<CompileFile command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
 			<Target title="package">
 				<Option working_dir="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
 					<Build command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 package"/>
+					<CompileFile command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="server">
+				<Option output="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/server" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DPLATFORM_DESKTOP"/>
+					<Add option="-DGRAPHICS_API_OPENGL_33"/>
+					<Add directory="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/raylib-src/src"/>
+					<Add directory="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/raylib-src/src/external/glfw/include"/>
+					<Add directory="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/cereal-src/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/14.0.3/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 server"/>
+					<CompileFile command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="server/fast">
+				<Option output="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/server" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DPLATFORM_DESKTOP"/>
+					<Add option="-DGRAPHICS_API_OPENGL_33"/>
+					<Add directory="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/raylib-src/src"/>
+					<Add directory="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/raylib-src/src/external/glfw/include"/>
+					<Add directory="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/cereal-src/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/14.0.3/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 server/fast"/>
 					<CompileFile command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j10 -f &quot;/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
@@ -470,8 +524,30 @@
 		<Unit filename="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/raylib-src/src/utils.h">
 			<Option target="raylib"/>
 		</Unit>
+		<Unit filename="/Users/juliannevella/Desktop/CPS2008/netsketch/connect_server.cpp">
+			<Option target="server"/>
+		</Unit>
+		<Unit filename="/Users/juliannevella/Desktop/CPS2008/netsketch/connect_server.h">
+			<Option target="server"/>
+		</Unit>
+		<Unit filename="/Users/juliannevella/Desktop/CPS2008/netsketch/draw.h">
+			<Option target="netsketch"/>
+			<Option target="server"/>
+		</Unit>
+		<Unit filename="/Users/juliannevella/Desktop/CPS2008/netsketch/global_client.cpp">
+			<Option target="netsketch"/>
+		</Unit>
+		<Unit filename="/Users/juliannevella/Desktop/CPS2008/netsketch/global_client.h">
+			<Option target="netsketch"/>
+		</Unit>
 		<Unit filename="/Users/juliannevella/Desktop/CPS2008/netsketch/main.cpp">
 			<Option target="netsketch"/>
+		</Unit>
+		<Unit filename="/Users/juliannevella/Desktop/CPS2008/netsketch/server.cpp">
+			<Option target="server"/>
+		</Unit>
+		<Unit filename="/Users/juliannevella/Desktop/CPS2008/netsketch/server.h">
+			<Option target="server"/>
 		</Unit>
 		<Unit filename="/Users/juliannevella/Desktop/CPS2008/netsketch/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
@@ -541,6 +617,9 @@
 		</Unit>
 		<Unit filename="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/raylib-src/cmake/raylib-config-version.cmake">
 			<Option virtualFolder="CMake Files\cmake-build-debug\_deps\raylib-src\cmake\"/>
+		</Unit>
+		<Unit filename="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/cereal-src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-debug\_deps\cereal-src\"/>
 		</Unit>
 	</Project>
 </CodeBlocks_project_file>

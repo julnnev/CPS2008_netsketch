@@ -38,4 +38,6 @@ struct Draw {
     std::tuple<int, int, int> RGBColour;
 };
 
+// structs for delete, undo, select
+
 #endif //NETSKETCH_DRAW_H

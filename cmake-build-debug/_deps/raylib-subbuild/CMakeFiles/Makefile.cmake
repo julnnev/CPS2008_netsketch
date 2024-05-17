@@ -7,10 +7,8 @@ set(CMAKE_DEPENDS_GENERATOR "Unix Makefiles")
 # The top level Makefile was generated from the following files:
 set(CMAKE_MAKEFILE_DEPENDS
   "CMakeCache.txt"
-  "/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.20/Modules/CMakeDetermineSystem.cmake"
   "/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.20/Modules/CMakeGenericSystem.cmake"
   "/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.20/Modules/CMakeInitializeConfigs.cmake"
-  "/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.20/Modules/CMakeSystem.cmake.in"
   "/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.20/Modules/CMakeSystemSpecificInformation.cmake"
   "/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.20/Modules/CMakeSystemSpecificInitialize.cmake"
   "/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.20/Modules/ExternalProject-gitupdate.cmake.in"
@@ -32,7 +30,6 @@ set(CMAKE_MAKEFILE_OUTPUTS
 
 # Byproducts of CMake generate step:
 set(CMAKE_MAKEFILE_PRODUCTS
-  "CMakeFiles/3.20.2/CMakeSystem.cmake"
   "raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-gitinfo.txt"
   "raylib-populate-prefix/tmp/raylib-populate-gitupdate.cmake"
   "raylib-populate-prefix/tmp/raylib-populate-cfgcmd.txt"

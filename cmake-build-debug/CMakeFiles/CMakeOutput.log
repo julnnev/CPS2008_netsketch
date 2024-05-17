@@ -321,3 +321,16 @@ int main(void)
   return 0;
 }
 
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_M32 succeeded with the following output:
+Change Dir: /Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_4bfb3/fast && /Applications/Xcode.app/Contents/Developer/usr/bin/make  -f CMakeFiles/cmTC_4bfb3.dir/build.make CMakeFiles/cmTC_4bfb3.dir/build
+Building CXX object CMakeFiles/cmTC_4bfb3.dir/src.cxx.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ -DCOMPILER_SUPPORT_M32  -m32 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk   -m32 -std=gnu++17 -MD -MT CMakeFiles/cmTC_4bfb3.dir/src.cxx.o -MF CMakeFiles/cmTC_4bfb3.dir/src.cxx.o.d -o CMakeFiles/cmTC_4bfb3.dir/src.cxx.o -c /Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_4bfb3
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E cmake_link_script CMakeFiles/cmTC_4bfb3.dir/link.txt --verbose=1
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  -m32 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_4bfb3.dir/src.cxx.o -o cmTC_4bfb3 
+
+
+Source file was:
+int main() { return 0; }

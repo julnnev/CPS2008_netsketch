@@ -8,6 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
+  "/Users/juliannevella/Desktop/CPS2008/netsketch/global_client.cpp" "/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/CMakeFiles/netsketch.dir/global_client.cpp.o"
   "/Users/juliannevella/Desktop/CPS2008/netsketch/main.cpp" "/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/CMakeFiles/netsketch.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "AppleClang")
@@ -23,6 +24,7 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "../."
   "_deps/raylib-src/src"
   "_deps/raylib-src/src/external/glfw/include"
+  "_deps/cereal-src/include"
   )
 
 # The set of dependency files which are needed:

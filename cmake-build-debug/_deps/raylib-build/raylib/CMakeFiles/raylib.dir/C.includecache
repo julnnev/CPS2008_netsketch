@@ -947,8 +947,6 @@ ctype.h
 -
 external/stb_rect_pack.h
 /Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/raylib-src/src/external/stb_rect_pack.h
-math.h
--
 external/stb_truetype.h
 /Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/raylib-src/src/external/stb_truetype.h
 

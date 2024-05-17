@@ -110,15 +110,15 @@ list_install_components:
 list_install_components/fast: list_install_components
 .PHONY : list_install_components/fast
 
-# Special rule for the target package_source
-package_source:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Run CPack packaging tool for source..."
-	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cpack --config ./CPackSourceConfig.cmake /Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/CPackSourceConfig.cmake
-.PHONY : package_source
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+.PHONY : edit_cache
 
-# Special rule for the target package_source
-package_source/fast: package_source
-.PHONY : package_source/fast
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+.PHONY : edit_cache/fast
 
 # Special rule for the target rebuild_cache
 rebuild_cache:
@@ -130,15 +130,15 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 .PHONY : rebuild_cache/fast
 
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-.PHONY : edit_cache
+# Special rule for the target package_source
+package_source:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Run CPack packaging tool for source..."
+	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cpack --config ./CPackSourceConfig.cmake /Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/CPackSourceConfig.cmake
+.PHONY : package_source
 
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-.PHONY : edit_cache/fast
+# Special rule for the target package_source
+package_source/fast: package_source
+.PHONY : package_source/fast
 
 # Special rule for the target package
 package: preinstall
@@ -195,6 +195,19 @@ netsketch/fast:
 .PHONY : netsketch/fast
 
 #=============================================================================
+# Target rules for targets named server
+
+# Build rule for target.
+server: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 server
+.PHONY : server
+
+# fast build rule for target.
+server/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/build
+.PHONY : server/fast
+
+#=============================================================================
 # Target rules for targets named uninstall
 
 # Build rule for target.
@@ -246,6 +259,54 @@ update_mappings/fast:
 	$(MAKE) $(MAKESILENT) -f _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/update_mappings.dir/build.make _deps/raylib-build/raylib/external/glfw/src/CMakeFiles/update_mappings.dir/build
 .PHONY : update_mappings/fast
 
+connect_server.o: connect_server.cpp.o
+.PHONY : connect_server.o
+
+# target to build an object file
+connect_server.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/connect_server.cpp.o
+.PHONY : connect_server.cpp.o
+
+connect_server.i: connect_server.cpp.i
+.PHONY : connect_server.i
+
+# target to preprocess a source file
+connect_server.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/connect_server.cpp.i
+.PHONY : connect_server.cpp.i
+
+connect_server.s: connect_server.cpp.s
+.PHONY : connect_server.s
+
+# target to generate assembly for a file
+connect_server.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/connect_server.cpp.s
+.PHONY : connect_server.cpp.s
+
+global_client.o: global_client.cpp.o
+.PHONY : global_client.o
+
+# target to build an object file
+global_client.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/netsketch.dir/build.make CMakeFiles/netsketch.dir/global_client.cpp.o
+.PHONY : global_client.cpp.o
+
+global_client.i: global_client.cpp.i
+.PHONY : global_client.i
+
+# target to preprocess a source file
+global_client.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/netsketch.dir/build.make CMakeFiles/netsketch.dir/global_client.cpp.i
+.PHONY : global_client.cpp.i
+
+global_client.s: global_client.cpp.s
+.PHONY : global_client.s
+
+# target to generate assembly for a file
+global_client.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/netsketch.dir/build.make CMakeFiles/netsketch.dir/global_client.cpp.s
+.PHONY : global_client.cpp.s
+
 main.o: main.cpp.o
 .PHONY : main.o
 
@@ -270,6 +331,30 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/netsketch.dir/build.make CMakeFiles/netsketch.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+server.o: server.cpp.o
+.PHONY : server.o
+
+# target to build an object file
+server.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server.cpp.o
+.PHONY : server.cpp.o
+
+server.i: server.cpp.i
+.PHONY : server.i
+
+# target to preprocess a source file
+server.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server.cpp.i
+.PHONY : server.cpp.i
+
+server.s: server.cpp.s
+.PHONY : server.s
+
+# target to generate assembly for a file
+server.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/server.cpp.s
+.PHONY : server.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -289,9 +374,19 @@ help:
 	@echo "... glfw"
 	@echo "... netsketch"
 	@echo "... raylib"
+	@echo "... server"
+	@echo "... connect_server.o"
+	@echo "... connect_server.i"
+	@echo "... connect_server.s"
+	@echo "... global_client.o"
+	@echo "... global_client.i"
+	@echo "... global_client.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... server.o"
+	@echo "... server.i"
+	@echo "... server.s"
 .PHONY : help
 
 

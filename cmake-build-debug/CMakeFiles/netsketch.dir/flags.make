@@ -4,7 +4,7 @@
 # compile CXX with /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++
 CXX_DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
 
-CXX_INCLUDES = -I/Users/juliannevella/Desktop/CPS2008/netsketch/. -I/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/raylib-src/src -I/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/raylib-src/src/external/glfw/include
+CXX_INCLUDES = -I/Users/juliannevella/Desktop/CPS2008/netsketch/. -I/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/raylib-src/src -I/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/raylib-src/src/external/glfw/include -I/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/cereal-src/include
 
 CXX_FLAGSarm64 = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -std=gnu++17
 

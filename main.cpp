@@ -2,14 +2,44 @@
 #include <iostream>
 #include <string>
 #include <thread>
-#include <sstream>
 #include <pthread.h>
 #include <vector>
 #include "draw.h"
 #include "global_client.h"
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
+#include <unistd.h>
+#include <cereal/archives/portable_binary.hpp>
+
+struct Head { //header object
+public:
+    size_t header;
+
+    // serialization function for cereal
+    template<class Archive>
+    void serialize(Archive & archive) {
+        archive(header);
+    }
+
+};
+
+struct Connect {
+public:
+    std::string username;
+    bool success;
+
+    template<class Archive>
+    void serialize(Archive & archive) {
+        archive(username, success);
+    }
+};
 
 struct ThreadArgs {
-    //    Draw* command;
+    // Draw* command;
     std::mutex *mutex;
     bool* cancelFlag;
 };
@@ -23,8 +53,8 @@ void *readInput(void* arg) {
     fflush(stdin);
     std::string input;
     std::tuple<int, int, int> RGBColour;
-    auto colour = std::make_tuple(0,0,0); //default colour is black,     //in parsing - assuming strings will not be surrounded in " "
-    std::string tool = "line"; //default line
+    auto colour = std::make_tuple(0,0,0); //default colour: black, in parsing - assuming strings will not be surrounded in " "
+    std::string tool = "line"; //default tool:  line
     int select_id;
     bool select;
     int delete_id;
@@ -34,7 +64,7 @@ void *readInput(void* arg) {
         std::vector<std::string> tokens;
         std::cout << ">>> " ;
         std::getline(std::cin, input);
-       // debug: std::cout << "Command entered: " << input << std::endl;
+        // debug: std::cout << "Command entered: " << input << std::endl;
         std::stringstream ss(input);
 
         while (ss >> token) {
@@ -73,8 +103,8 @@ void *readInput(void* arg) {
             tokens.erase(std::remove(tokens.begin(), tokens.end(), "help"), tokens.end());
         }
         else if(tokens[0] == "tool"){
-            std::transform(tokens[1].begin(), tokens[1].end(), tokens[1].begin(), [](unsigned char c) { return std::tolower(c); });
-            // Convert string to lowercase std::cout << "Lowercase string: " << tokens[1] << std::endl;
+            std::transform(tokens[1].begin(), tokens[1].end(), tokens[1].begin(), [](unsigned char c) { return std::tolower(c); }); // Convert string to lowercase
+            // std::cout << "Lowercase string: " << tokens[1] << std::endl;
             if(tokens[1] != "circle" && tokens[1] !=  "rectangle" && tokens[1] !=  "line" && tokens[1] !=  "text"){
                 std::cout << " Unknown tool type! " << std::endl;
                 // add more error handling for unknown tool types
@@ -176,10 +206,7 @@ void *readInput(void* arg) {
 
         }
         else if(tokens[0] == "list"){
-            // define further if statements
-            // .
-            // .
-            //
+            // define further if statements ...
             if(tokens[1] == "all" && tokens[2] == "all"){
                 int index = 0;
                 {
@@ -245,7 +272,6 @@ void *readInput(void* arg) {
         else if (tokens[0] == "delete"){
             try {
                 delete_id = std::stoi(tokens[1]);
-
                 // output local list
                 {
                     std::scoped_lock lock{*mutex};
@@ -263,7 +289,6 @@ void *readInput(void* arg) {
 
             // continue processing updating global list
 
-
         }
         else if (tokens[0] == "undo") {
             {
@@ -275,7 +300,6 @@ void *readInput(void* arg) {
                 }
             }
                 // continue processing updating global list
-
 
         }
         else if (tokens[0] == "clear"){
@@ -321,7 +345,84 @@ void *readInput(void* arg) {
 }
 
 
-int main() {
+int main(int argc, char *argv[]) {
+    int sockfd, portno;
+    std::string nickname;
+    struct sockaddr_in serv_addr;
+    struct hostent *server;
+    char buffer[256];
+    // Ensuirng correct CLI arguments are given
+    if (argc < 3) {
+        fprintf(stderr, "usage %s : hostname port nickname\n", argv[0]);
+        exit(0);
+    }
+    // Get port number
+    portno = atoi(argv[2]);
+    //fprintf(stdout, argv[3]); debug
+    nickname = argv[3];
+
+    // Socket creation
+    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+    {
+        strerror(sockfd);
+        fprintf(stderr,"ERROR opening socket");
+        exit(1);
+    }
+    // Get server name - get the host by name given IP
+    if ((server = gethostbyname(argv[1])) == NULL) {
+        fprintf(stderr, "ERROR, no such host\n");
+        close(sockfd);
+        exit(0);
+    }
+    //  serv_addr structure
+    memset(&serv_addr, 0, sizeof(serv_addr));
+    serv_addr.sin_family = AF_INET; //ipv4
+    memcpy(&serv_addr.sin_addr.s_addr,
+           server -> h_addr, //  server address
+           server -> h_length);
+    serv_addr.sin_port = htons(portno); // port (convert to network byte ordering) provided by the client
+
+    // Connect to the server
+    if (connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
+    {
+        fprintf(stderr,"ERROR connecting");
+        close(sockfd);
+        exit(1);
+    }
+
+    // write username to server
+    std::string to_send = nickname + '\0';
+    size_t payloadSize =  to_send.length();
+    Head head = {};
+    head.header = payloadSize;
+    std::stringstream ss;
+    cereal::PortableBinaryOutputArchive archive(ss);
+    archive(head);
+    std::string s;
+    s = ss.str();
+    //  send size to server
+    int n;
+    if ((n = write(sockfd, &s, 9)) < 0) {
+        fprintf(stderr, "ERROR writing payload size to socket");
+        close(sockfd);
+        exit(1);
+    }
+
+    if ((n = write(sockfd, &nickname, payloadSize)) < 0) {
+        fprintf(stderr, "ERROR writing payload content to socket");
+        close(sockfd);
+        exit(1);
+    }
+
+    char lclbuffer[256];
+    bzero(lclbuffer, 256);
+    n = read(sockfd, lclbuffer, 255);
+    if (n < 0) {
+        std::cerr << "ERROR reading response from socket\n";
+        return 1;
+    }
+    std::cout  << lclbuffer << std::endl;
+
     std::mutex mutex;
     SetTraceLogLevel(LOG_WARNING); // hide LOG messages from raylib
     pthread_t thread_id;
@@ -367,8 +468,10 @@ int main() {
     }
 
     pthread_join(thread_id, nullptr);
-
     CloseWindow();
+    if(cancel){
+        close(sockfd);
+    }
 
     return 0;
 }

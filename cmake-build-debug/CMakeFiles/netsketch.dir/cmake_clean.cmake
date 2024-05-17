@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/netsketch.dir/global_client.cpp.o"
   "CMakeFiles/netsketch.dir/main.cpp.o"
   "netsketch"
   "netsketch.pdb"

@@ -32,12 +32,12 @@ if(error_code)
 endif()
 
 execute_process(
-  COMMAND "/opt/homebrew/bin/git"  checkout master --
+  COMMAND "/opt/homebrew/bin/git"  checkout 5.0 --
   WORKING_DIRECTORY "/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/raylib-src"
   RESULT_VARIABLE error_code
   )
 if(error_code)
-  message(FATAL_ERROR "Failed to checkout tag: 'master'")
+  message(FATAL_ERROR "Failed to checkout tag: '5.0'")
 endif()
 
 set(init_submodules TRUE)

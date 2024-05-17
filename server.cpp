@@ -1,7 +1,5 @@
 #include <sstream>
-#include <cereal/archives/portable_binary.hpp>
 #include "server.h"
-#include <pthread.h>
 
 struct toRead{
     int* p_filedes;
@@ -9,127 +7,92 @@ struct toRead{
     bool* close_socket;
 };
 
-void* writeToClient(void* args){
+struct Head { //struct, header object, its size is hard coded in the first write/read operations before payload sent
+public:
+    size_t header;
 
-}
+    // Serialization function
+    template<class Archive>
+    void serialize(Archive & archive) {
+        archive(header);
+    }
+};
+
+
 // one thread for each client that waits for client input
 void* readFromClient(void* args){
     auto* info = static_cast<toRead*>(args);
     int filedes = *info->p_filedes;
     fd_set active_fd_set = *info -> active_fd_set;
-    char buffer[MAXMSG];
     int nbytes;
 
-    nbytes = read(filedes, buffer, MAXMSG);
-
-    if (nbytes < 0) {
-        // Read error
-        perror("read");
+    std::vector<char> header;
+    header.reserve(9);
+    nbytes = read(filedes, header.data(), 9);
+    //insert error handling checking value of nbytes
+    if(nbytes<0){
+        fprintf(stderr, "ERROR reading payload size from socket");
         close(filedes);
         exit(EXIT_FAILURE);
     }
-    else if (nbytes == 0) {//nothing read from client
-        // End-of-file.
-        *info->close_socket = true; //closes socket
-//        close(filedes);
-//        FD_CLR (filedes, &active_fd_set);
+
+    std::string header_str;
+
+    for (int i = 0; i < 9; i++) {
+        header_str.push_back(header[i]);
     }
-    else {
-        // Data read.
-        fprintf(stdout, "Server: got message: `%s`", buffer);
-        if ((nbytes = write(filedes, "I got your message", 18)) < 0) {
-            close(filedes);
-            perror("ERROR writing to socket");
-            exit(EXIT_FAILURE);
-        }
 
-//        Connect connection;
-//        std::istringstream iss(std::string(buffer, MAXMSG));
-//        cereal::PortableBinaryInputArchive archive(iss);
-//        archive(connection); // connection is the object
-//
-//        connection.username;
-//        connection.success;
-//
-//        // Data read.
-//        fprintf(stderr, "Server: got success: `%d`\n", connection.success);
-//        fprintf(stderr, "Server: got message: `%s`\n", connection.username.c_str());
+    // deserialize the string
+    std::istringstream iss(header_str);
+    Head head = {};
+    {
+        cereal::PortableBinaryInputArchive archive(iss);
+        archive(head);
     }
-    return nullptr;
-}
 
-void* handleConnections(void *arg){
-    int socket;
-    fd_set active_fd_set, read_fd_set;
-    int i;
-    struct sockaddr_in clientname;
-    int size;
-    int sock = *static_cast<int *>(arg);
+    size_t payloadSize = head.header;
+    std::vector<char> buffer(payloadSize);
+    buffer.reserve(payloadSize);
 
-    // Listen for connections
-    if (listen(sock, 1) < 0) {
-        fprintf(stderr,"listen");
-        close(sock);
+    char lclbuffer[payloadSize];
+    nbytes = read(filedes, lclbuffer, payloadSize);
+    // DEBUG: std::cout  << nbytes << std::endl;
+
+    if (nbytes < 0) {
+        // Read error
+        fprintf(stderr, "ERROR reading payload content from socket");
+        close(filedes);
         exit(EXIT_FAILURE);
     }
+    else if (nbytes == 0) { //nothing read from client
+        *info->close_socket = true; //closes socket
+        FD_CLR (filedes, &active_fd_set);
+        close(filedes);
+    }
+    else {
+        std::cout <<  "Server got: " << lclbuffer << std::endl;
+        const char* message_response = "Connected to Netsketch Server!\nReady to draw.\nType help for command list.";
+        size_t length = strlen(message_response);
+        int n;
 
-    /* Initialize the set of active sockets. */
-    FD_ZERO (&active_fd_set); //set to all zeros
-    FD_SET (sock, &active_fd_set); // if there is an action pending on this set, we need to call accept on that socket
-
-    while (true) { //infinite loop
-        /* Block until input arrives on one or more active sockets. */
-        read_fd_set = active_fd_set;
-        if (select(FD_SETSIZE, &read_fd_set, nullptr, nullptr, nullptr) < 0) {
-            fprintf(stderr,"select");
-            close(sock);
-            exit(EXIT_FAILURE);
+        if ((n = write(filedes, message_response, length)) < 0) {
+            fprintf(stderr, "ERROR writing to socket");
         }
 
-        // When select returns we need to service sockets with pending action.
-        /* Service all the sockets with input pending. */
-
-        for (int i = 0; i < FD_SETSIZE; ++i)
-            if (FD_ISSET (i, &read_fd_set)) { // is bit set/not, ie. 1 pending, 0 none pending
-                if (i == sock) { //original socket?
-                    /* Connection request on original socket. */
-                    int New;
-                    size = sizeof(clientname);
-
-                    New = accept(sock, (struct sockaddr *) &clientname, reinterpret_cast<socklen_t *>(&size)); // new socket bound to the client
-
-                    if (New < 0) {
-                        close(sock);
-                        fprintf(stderr,"accept");
-                        exit(EXIT_FAILURE);
-                    }
-
-                    fprintf(stderr,
-                            "Server: connect from host %s, port %d.\n",
-                            inet_ntoa(clientname.sin_addr),
-                            ntohs(clientname.sin_port));
-
-                    FD_SET (New, &active_fd_set); // we need to add new socket to active file descriptor set
-                    // at this point our set contains the original and the new socket (2)
-
-                    // get connect packet
-                    // deserialize
-                    // check for unique username, otherwise close connection and notify client
-                    //
-
-                    // update server state
-
-                } else {
-//                    char buffer[1024];
-//                    ssize_t bytes_received = recv(i, buffer, sizeof(buffer), 0);
-//                    if (bytes_received == -1) {
-//                        perror( "Error receiving data from client");
-//                        close(i);
-//                        FD_CLR (i, &active_fd_set);
-//                    }
+//        std::cout << "Buffer content: " << buffer << std::endl;
+//        std::cout << "nbytes =  " << nbytes << std::endl;
 //
-//                    buffer[bytes_received] = '\0';
+//        // Data read.
+//        std::istringstream iss(std::string(buffer, sizeof(buffer)));
+//        Connect connect;
+//        // Deserialize the data from the input string stream
+//        {
+//            cereal::PortableBinaryInputArchive archive(iss);
+//            archive(connect1);
+//        }
 //
+//        fprintf(stdout, "Server: got message: `%s`", connect1.username.c_str());
+
 //                    // Check if the received username is valid
 //                    string username(buffer);
 //                    bool exists = false;
@@ -155,9 +118,65 @@ void* handleConnections(void *arg){
 //                        FD_CLR (i, &active_fd_set);
 //                        continue;
 //                    }
+    }
+    return nullptr;
+}
 
-                    /* Data arriving on an already-connected socket. */
-                    // put in seperate thread
+void* handleConnections(void *arg){
+    fd_set active_fd_set, read_fd_set;
+    int i;
+    struct sockaddr_in clientname;
+    int size;
+    int sock = *static_cast<int *>(arg);
+
+    // Listen for connections
+    if (listen(sock, 1) < 0) {
+        fprintf(stderr,"listen");
+        close(sock);
+        exit(EXIT_FAILURE);
+    }
+
+    // Set of Active Sockets
+    FD_ZERO (&active_fd_set); // set to all zeros
+    FD_SET (sock, &active_fd_set); // when an action is pending, call accept
+
+    while (true) {
+        // Blocking until input arrives.
+        read_fd_set = active_fd_set;
+        if (select(FD_SETSIZE, &read_fd_set, nullptr, nullptr, nullptr) < 0) {
+            fprintf(stderr,"select");
+            close(sock);
+            exit(EXIT_FAILURE);
+        }
+
+        // When select returns, service pending sockets
+        for (int i = 0; i < FD_SETSIZE; ++i)
+            if (FD_ISSET (i, &read_fd_set)) {
+                if (i == sock) { //original socket?
+                    int New;
+                    size = sizeof(clientname);
+
+                    // new socket bound to the client
+                    New = accept(sock, (struct sockaddr *) &clientname, reinterpret_cast<socklen_t *>(&size));
+
+                    if (New < 0) {
+                        close(sock);
+                        fprintf(stderr,"accept");
+                        exit(EXIT_FAILURE);
+                    }
+
+                    fprintf(stderr,
+                            "Server: connect from host %s, port %d.\n",
+                            inet_ntoa(clientname.sin_addr),
+                            ntohs(clientname.sin_port));
+
+                    FD_SET (New, &active_fd_set); // we need to add new socket to active file descriptor set
+                    // at this point our set contains the original new sockets
+
+                    // check for unique username and store in list
+
+                } else {
+                    // Data on connected socket.
                     pthread_t thread_id_readFromClient;
                     bool close_socket = false;
                     toRead info = {&i, &active_fd_set, &close_socket};
@@ -174,8 +193,15 @@ void* handleConnections(void *arg){
 }
 
 int main() {
+    Head header = {};
+    std::stringstream ss;
+    cereal::PortableBinaryOutputArchive archive(ss);
+    archive(header);
+    std::string s;
+    s = ss.str();
+    std::size_t serialized_size = s.length();
+  //  std::cout << "Size of serialized object: " << serialized_size << " bytes" << std::endl; //9 bytes
     ServerState state;
-    // Declare variables
     int sock;
     struct sockaddr_in serv_addr;
 
@@ -220,12 +246,10 @@ int main() {
     }
 
     pthread_t thread_id_handleconnections;
-    pthread_create(&thread_id_handleconnections, NULL, handleConnections, &sock);
+    pthread_create(&thread_id_handleconnections, nullptr, handleConnections, &sock);
     pthread_join(thread_id_handleconnections, nullptr);
 }
-
-//  g++ -o server server.cpp
-// ./server
-
-
 // thread to update all clients
+//void* writeToClient(void* args){
+//
+//}

@@ -25,7 +25,6 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.20/Modules/CPackComponent.cmake"
   "/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.20/Modules/CheckCCompilerFlag.cmake"
   "/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.20/Modules/CheckCSourceCompiles.cmake"
-  "/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.20/Modules/CheckIncludeFile.c.in"
   "/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.20/Modules/CheckIncludeFile.cmake"
   "/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.20/Modules/CheckLibraryExists.cmake"
   "/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.20/Modules/Compiler/AppleClang-C.cmake"
@@ -57,6 +56,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "CMakeFiles/3.20.2/CMakeCCompiler.cmake"
   "CMakeFiles/3.20.2/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.20.2/CMakeSystem.cmake"
+  "_deps/cereal-src/CMakeLists.txt"
   "_deps/raylib-src/CMakeLists.txt"
   "_deps/raylib-src/CMakeOptions.txt"
   "_deps/raylib-src/cmake/AddIfFlagCompiles.cmake"
@@ -89,8 +89,10 @@ set(CMAKE_MAKEFILE_OUTPUTS
 
 # Byproducts of CMake generate step:
 set(CMAKE_MAKEFILE_PRODUCTS
+  "_deps/cereal-subbuild/CMakeLists.txt"
   "_deps/raylib-subbuild/CMakeLists.txt"
   "CMakeFiles/CMakeDirectoryInformation.cmake"
+  "_deps/cereal-build/CMakeFiles/CMakeDirectoryInformation.cmake"
   "_deps/raylib-build/cmake_uninstall.cmake"
   "_deps/raylib-build/CMakeFiles/CMakeDirectoryInformation.cmake"
   "_deps/raylib-build/raylib/raylib.pc"
@@ -108,6 +110,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/netsketch.dir/DependInfo.cmake"
+  "CMakeFiles/server.dir/DependInfo.cmake"
   "_deps/raylib-build/CMakeFiles/uninstall.dir/DependInfo.cmake"
   "_deps/raylib-build/raylib/CMakeFiles/raylib.dir/DependInfo.cmake"
   "_deps/raylib-build/raylib/external/glfw/src/CMakeFiles/glfw.dir/DependInfo.cmake"

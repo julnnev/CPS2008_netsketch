@@ -14,13 +14,40 @@
 # EXTERNAL cache entries
 ########################
 
+//Build documentation
+BUILD_DOC:BOOL=ON
+
 //Build the examples.
 BUILD_EXAMPLES:BOOL=OFF
 
 BUILD_GAMES:BOOL=OFF
 
-//Build shared libraries
+//Build sandbox examples
+BUILD_SANDBOX:BOOL=ON
+
+// 
 BUILD_SHARED_LIBS:BOOL=OFF
+
+//Build tests
+BUILD_TESTS:BOOL=OFF
+
+//The directory containing a CMake configuration file for Boost.
+Boost_DIR:PATH=Boost_DIR-NOTFOUND
+
+//Path to a file.
+Boost_INCLUDE_DIR:PATH=Boost_INCLUDE_DIR-NOTFOUND
+
+//Boost serialization library (debug)
+Boost_SERIALIZATION_LIBRARY_DEBUG:FILEPATH=Boost_SERIALIZATION_LIBRARY_DEBUG-NOTFOUND
+
+//Boost serialization library (release)
+Boost_SERIALIZATION_LIBRARY_RELEASE:FILEPATH=Boost_SERIALIZATION_LIBRARY_RELEASE-NOTFOUND
+
+//Generate the install target
+CEREAL_INSTALL:BOOL=OFF
+
+//Use libc++ for clang compilation
+CLANG_USE_LIBCPP:BOOL=OFF
 
 //Path to a program.
 CMAKE_ADDR2LINE:FILEPATH=CMAKE_ADDR2LINE-NOTFOUND
@@ -334,11 +361,18 @@ FETCHCONTENT_FULLY_DISCONNECTED:BOOL=OFF
 FETCHCONTENT_QUIET:BOOL=ON
 
 //When not empty, overrides where to find pre-populated content
+// for cereal
+FETCHCONTENT_SOURCE_DIR_CEREAL:PATH=
+
+//When not empty, overrides where to find pre-populated content
 // for raylib
 FETCHCONTENT_SOURCE_DIR_RAYLIB:PATH=
 
 //Enables UPDATE_DISCONNECTED behavior for all content population
 FETCHCONTENT_UPDATES_DISCONNECTED:BOOL=OFF
+
+//Enables UPDATE_DISCONNECTED behavior just for population of cereal
+FETCHCONTENT_UPDATES_DISCONNECTED_CEREAL:BOOL=OFF
 
 //Enables UPDATE_DISCONNECTED behavior just for population of raylib
 FETCHCONTENT_UPDATES_DISCONNECTED_RAYLIB:BOOL=OFF
@@ -369,8 +403,13 @@ GLFW_LIBRARY_TYPE:STRING=OBJECT
 //Value Computed by CMake
 GLFW_SOURCE_DIR:STATIC=/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/raylib-src/src/external/glfw
 
+GLFW_USE_WAYLAND:BOOL=
+
 //Include everything disabled by default (for CI usage
 INCLUDE_EVERYTHING:BOOL=OFF
+
+//Don't do anything besides installing the library
+JUST_INSTALL_CEREAL:BOOL=OFF
 
 //Build fat library for both i386 and x86_64 on macOS
 MACOS_FATLIB:BOOL=OFF
@@ -387,11 +426,29 @@ PLATFORM:STRING=Desktop
 //Path to a program.
 ProcessorCount_cmd_sysctl:FILEPATH=/usr/sbin/sysctl
 
+//Skip building performance sandbox comparison (requires boost)
+SKIP_PERFORMANCE_COMPARISON:BOOL=OFF
+
+//Skip portability (32 bit) tests
+SKIP_PORTABILITY_TEST:BOOL=OFF
+
+//Use mutexes to ensure thread safety
+THREAD_SAFE:BOOL=OFF
+
 //Link raylib against system GLFW instead of embedded one
 USE_EXTERNAL_GLFW:STRING=OFF
 
 //Compile static library as position-independent code
 WITH_PIC:BOOL=OFF
+
+//Compile with '-Werror' C++ compiler flag
+WITH_WERROR:BOOL=ON
+
+//Value Computed by CMake
+cereal_BINARY_DIR:STATIC=/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/cereal-build
+
+//Value Computed by CMake
+cereal_SOURCE_DIR:STATIC=/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/cereal-src
 
 //Value Computed by CMake
 netsketch_BINARY_DIR:STATIC=/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug
@@ -413,6 +470,12 @@ raylib_SOURCE_DIR:STATIC=/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-bu
 # INTERNAL cache entries
 ########################
 
+//ADVANCED property for variable: Boost_DIR
+Boost_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_SERIALIZATION_LIBRARY_DEBUG
+Boost_SERIALIZATION_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: Boost_SERIALIZATION_LIBRARY_RELEASE
+Boost_SERIALIZATION_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_ADDR2LINE
 CMAKE_ADDR2LINE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_AR
@@ -549,7 +612,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=5
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=6
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
@@ -594,6 +657,8 @@ CMAKE_UNAME:INTERNAL=/usr/bin/uname
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 //Test COMPILER_HAS_THOSE_TOGGLES
 COMPILER_HAS_THOSE_TOGGLES:INTERNAL=1
+//Test COMPILER_SUPPORT_M32
+COMPILER_SUPPORT_M32:INTERNAL=1
 //ADVANCED property for variable: CPACK_SOURCE_RPM
 CPACK_SOURCE_RPM-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CPACK_SOURCE_TBZ2
@@ -624,7 +689,7 @@ OFF:INTERNAL=OFF
 //STRINGS property for variable: OPENGL_VERSION
 OPENGL_VERSION-STRINGS:INTERNAL=OFF;4.3;3.3;2.1;1.1;ES 2.0;ES 3.0
 //STRINGS property for variable: PLATFORM
-PLATFORM-STRINGS:INTERNAL=Desktop;Web;Android;Raspberry Pi;DRM;SDL
+PLATFORM-STRINGS:INTERNAL=Desktop;Web;Android;Raspberry Pi;DRM
 //ADVANCED property for variable: ProcessorCount_cmd_sysctl
 ProcessorCount_cmd_sysctl-ADVANCED:INTERNAL=1
 //STRINGS property for variable: USE_EXTERNAL_GLFW

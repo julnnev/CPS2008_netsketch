@@ -31,27 +31,27 @@ FetchContent_MakeAvailable(cereal)
 FetchContent_MakeAvailable(raylib)
 
 add_executable(netsketch main.cpp draw.h global_client.cpp global_client.h)
-add_executable(client client.cpp client.h connect_server.cpp connect_server.h draw.h global_client.cpp global_client.h)
+# add_executable(client client.cpp client.h connect_server.cpp connect_server.h draw.h global_client.cpp global_client.h global_clientb.cpp global_clientb.h)
 add_executable(server server.cpp server.h connect_server.cpp connect_server.h draw.h)
 
 
 
 # Checks if OSX and links appropriate frameworks (only required on MacOS)
 if (APPLE)
-    target_link_libraries(client PRIVATE "-framework IOKit")
+  #  target_link_libraries(client PRIVATE "-framework IOKit")
     target_link_libraries(netsketch PRIVATE "-framework IOKit")
     target_link_libraries(netsketch PRIVATE "-framework Cocoa")
-    target_link_libraries(client PRIVATE "-framework Cocoa")
+  #  target_link_libraries(client PRIVATE "-framework Cocoa")
     target_link_libraries(netsketch PRIVATE "-framework OpenGL")
-    target_link_libraries(client PRIVATE "-framework OpenGL")
+   # target_link_libraries(client PRIVATE "-framework OpenGL")
 endif ()
 
 target_link_libraries(netsketch PRIVATE
         raylib cereal::cereal
         )
-target_link_libraries(client PRIVATE
-        raylib cereal::cereal
-        )
+#target_link_libraries(client PRIVATE
+      #  raylib cereal::cereal
+      #  )
 target_link_libraries(server PRIVATE
         raylib cereal::cereal
         )

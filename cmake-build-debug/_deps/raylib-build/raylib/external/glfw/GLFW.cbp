@@ -5,7 +5,7 @@
 		<Option title="GLFW"/>
 		<Option makefile_is_custom="1"/>
 		<Option compiler="gcc"/>
-		<Option virtualFolders="CMake Files\;CMake Files\cmake-build-debug\;CMake Files\cmake-build-debug\_deps\;CMake Files\cmake-build-debug\_deps\raylib-src\;CMake Files\cmake-build-debug\_deps\raylib-src\src\;CMake Files\cmake-build-debug\_deps\raylib-src\src\external\;CMake Files\cmake-build-debug\_deps\raylib-src\src\external\glfw\;CMake Files\cmake-build-debug\_deps\raylib-src\src\external\glfw\CMake\;CMake Files\cmake-build-debug\_deps\raylib-src\src\external\glfw\src\;CMake Files\cmake-build-debug\_deps\raylib-src\cmake\;"/>
+		<Option virtualFolders="CMake Files\;CMake Files\cmake-build-debug\;CMake Files\cmake-build-debug\_deps\;CMake Files\cmake-build-debug\_deps\raylib-src\;CMake Files\cmake-build-debug\_deps\raylib-src\src\;CMake Files\cmake-build-debug\_deps\raylib-src\src\external\;CMake Files\cmake-build-debug\_deps\raylib-src\src\external\glfw\;CMake Files\cmake-build-debug\_deps\raylib-src\src\external\glfw\CMake\;CMake Files\cmake-build-debug\_deps\raylib-src\src\external\glfw\src\;CMake Files\cmake-build-debug\_deps\raylib-src\cmake\;CMake Files\cmake-build-debug\_deps\cereal-src\;"/>
 		<Build>
 			<Target title="all">
 				<Option working_dir="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/raylib-build/raylib/external/glfw"/>
@@ -248,6 +248,9 @@
 		</Unit>
 		<Unit filename="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/raylib-src/cmake/raylib-config-version.cmake">
 			<Option virtualFolder="CMake Files\cmake-build-debug\_deps\raylib-src\cmake\"/>
+		</Unit>
+		<Unit filename="/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/cereal-src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-debug\_deps\cereal-src\"/>
 		</Unit>
 	</Project>
 </CodeBlocks_project_file>

@@ -39,6 +39,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
+  include("/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/cereal-build/cmake_install.cmake")
   include("/Users/juliannevella/Desktop/CPS2008/netsketch/cmake-build-debug/_deps/raylib-build/cmake_install.cmake")
 
 endif()

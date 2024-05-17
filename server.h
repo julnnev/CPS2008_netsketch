@@ -19,9 +19,11 @@
 #include "connect_server.h"
 #include "connect_server.cpp"
 #include <ctime>
+#include <pthread.h>
+#include <cereal/archives/portable_binary.hpp>
+
 
 #define PORT 5001
-#define MAXMSG  512
 
 class server {
 
@@ -30,14 +32,14 @@ class server {
 struct Command{
     Draw draw;
     int commandID;
-    std::string author; //nickname/username of author
+    std::string username; // nickname/username of author
     bool show;
 };
 
 struct userData{
     std::string username;
     time_t lastLogged;
-    std::vector<Command> authored;
+    //std::vector<Command> authored;
 };
 
 struct ServerState{
