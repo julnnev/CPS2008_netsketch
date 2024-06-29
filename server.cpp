@@ -70,7 +70,8 @@ void* readFromClient(void* args){
         close(filedes);
     }
     else {
-        std::cout <<  "Server got: " << lclbuffer << std::endl;
+        //std::cout <<  "Server got: " << lclbuffer << std::endl;
+        fprintf(stdout, lclbuffer);
         const char* message_response = "Connected to Netsketch Server!\nReady to draw.\nType help for command list.";
         size_t length = strlen(message_response);
         int n;
@@ -118,6 +119,8 @@ void* readFromClient(void* args){
 //                        FD_CLR (i, &active_fd_set);
 //                        continue;
 //                    }
+
+        // check for unique username and store in list
     }
     return nullptr;
 }
@@ -166,14 +169,13 @@ void* handleConnections(void *arg){
                     }
 
                     fprintf(stderr,
-                            "Server: connect from host %s, port %d.\n",
+                            "Server connected from host %s, with port number %d.\n",
                             inet_ntoa(clientname.sin_addr),
                             ntohs(clientname.sin_port));
 
-                    FD_SET (New, &active_fd_set); // we need to add new socket to active file descriptor set
-                    // at this point our set contains the original new sockets
+                    FD_SET (New, &active_fd_set); // add new socket to active file descriptor set
+                    // set contains the original new sockets
 
-                    // check for unique username and store in list
 
                 } else {
                     // Data on connected socket.
@@ -193,6 +195,7 @@ void* handleConnections(void *arg){
 }
 
 int main() {
+    //test
     Head header = {};
     std::stringstream ss;
     cereal::PortableBinaryOutputArchive archive(ss);
@@ -201,6 +204,8 @@ int main() {
     s = ss.str();
     std::size_t serialized_size = s.length();
   //  std::cout << "Size of serialized object: " << serialized_size << " bytes" << std::endl; //9 bytes
+
+
     ServerState state;
     int sock;
     struct sockaddr_in serv_addr;
@@ -249,7 +254,3 @@ int main() {
     pthread_create(&thread_id_handleconnections, nullptr, handleConnections, &sock);
     pthread_join(thread_id_handleconnections, nullptr);
 }
-// thread to update all clients
-//void* writeToClient(void* args){
-//
-//}

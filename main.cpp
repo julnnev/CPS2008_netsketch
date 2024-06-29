@@ -49,12 +49,15 @@ void *readInput(void* arg) {
     std::mutex *mutex = threadArgs->mutex;
     Draw command;
     bool* cancelFlag = threadArgs->cancelFlag;
+
     SetTraceLogLevel(LOG_WARNING); // hide LOG messages from raylib
+
     fflush(stdin);
     std::string input;
     std::tuple<int, int, int> RGBColour;
     auto colour = std::make_tuple(0,0,0); //default colour: black, in parsing - assuming strings will not be surrounded in " "
     std::string tool = "line"; //default tool:  line
+
     int select_id;
     bool select;
     int delete_id;
@@ -85,7 +88,8 @@ void *readInput(void* arg) {
                    "\n"
                    "colour {RGB} - Sets the drawing colour using RGB values.\n"
                    "\n"
-                   "draw {parameters} - Executes the drawing of the selected shape on the canvas. For text, it requires coordinates and the text string. \n"
+                   "draw {parameters} - Executes the drawing of the selected shape on the canvas. \n\tFor text, please provide coordinates and the text string. \n \tFor a line, please provide the start and end coordinates and the text string.  "
+                   "\n\tFor a circle, please provide the center coordinates and the radius. \n\tFor a rectangle, please provide the coordinates of the top left and bottom right corners. \n"
                    "\n"
                    "list {all | line | rectangle | circle | text} {all | mine} - Displays issued draw commands in the console.\n"
                    "\n"
@@ -115,7 +119,17 @@ void *readInput(void* arg) {
         }
         else if(tokens[0] == "colour"){
             try{
-                colour = std::make_tuple(std::stoi(tokens[1]), std::stoi(tokens[2]), std::stoi(tokens[3]));
+                int value1 = std::stoi(tokens[1]);
+                int value2 = std::stoi(tokens[2]);
+                int value3 = std::stoi(tokens[3]);
+
+                if(0<= value1 && value1<=255 && 0<= value2 && value2<=255 && 0<= value3 && value3<=255){
+                    colour = std::make_tuple(value1, value2, value3);
+                }
+                else{
+                    std::cout << "Please enter valid RGB values in the range 0 to 255, separated  with a space." << std::endl;
+                }
+
             } catch (std::exception &err){
                 std::cout << "Invalid parameters for colour!"<< std::endl;
             }
@@ -123,7 +137,6 @@ void *readInput(void* arg) {
         }
         else if(tokens[0] == "draw"){
             try {
-
                 if (tool == "text") {
                     TextShape text;
                     text.x = std::stoi(tokens[1]);
@@ -186,6 +199,7 @@ void *readInput(void* arg) {
                 if (select) {
                     {
                         std::scoped_lock lock{*mutex};
+                        drawList[select_id].RGBColour = command.RGBColour;
                         drawList[select_id].item = command.item;
 
                         // continue processing
@@ -207,7 +221,7 @@ void *readInput(void* arg) {
         }
         else if(tokens[0] == "list"){
             // define further if statements ...
-            if(tokens[1] == "all" && tokens[2] == "all"){
+            if(tokens[1] == "all" && tokens[2] == "mine"){
                 int index = 0;
                 {
                     std::scoped_lock lock{*mutex};
@@ -303,16 +317,25 @@ void *readInput(void* arg) {
 
         }
         else if (tokens[0] == "clear"){
-            if(tokens[1] == "all"){
-
-            } else if (tokens[1] == "mine"){
-
-            } else{
-                std::cout << "Invalid parameter for clear! " << std::endl;
+            {
+                std::scoped_lock lock{*mutex};
+                if (drawList.size() > 0) {
+                    drawList.clear();
+                } else{
+                    std::cout << "No draws to clear!" << std::endl;
+                }
             }
 
-            // continue processing
-            std::cout << "Continue ..." << std::endl;
+//            if(tokens[1] == "all"){
+//
+//            } else if (tokens[1] == "mine"){
+//
+//            } else{
+//                std::cout << "Invalid parameter for clear! " << std::endl;
+//            }
+//
+//            // continue processing
+//            std::cout << "Continue ..." << std::endl;
 
         }
         else if (tokens[0] == "show"){
@@ -321,7 +344,7 @@ void *readInput(void* arg) {
             } else if (tokens[1] == "mine"){
 
             } else{
-                std::cout << "Invalid parameter for show! " << std::endl;
+                //std::cout << "Invalid parameter for show! " << std::endl;
             }
 
             // continue processing
@@ -358,7 +381,7 @@ int main(int argc, char *argv[]) {
     }
     // Get port number
     portno = atoi(argv[2]);
-    //fprintf(stdout, argv[3]); debug
+
     nickname = argv[3];
 
     // Socket creation
@@ -374,6 +397,7 @@ int main(int argc, char *argv[]) {
         close(sockfd);
         exit(0);
     }
+
     //  serv_addr structure
     memset(&serv_addr, 0, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET; //ipv4
@@ -468,7 +492,9 @@ int main(int argc, char *argv[]) {
     }
 
     pthread_join(thread_id, nullptr);
+
     CloseWindow();
+
     if(cancel){
         close(sockfd);
     }
